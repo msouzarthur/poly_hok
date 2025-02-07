@@ -265,12 +265,13 @@ defmodule PolyHok.TypeInference do
             case map[:return] do
               :none ->
                   inf_type = find_type_exp(map,arg)
-                  IO.inspect "Aqueee #{inspect inf_type}"
+                 # IO.inspect "Aqueee #{inspect inf_type}"
                   case inf_type do
                       :none -> map
                        found_type ->  map = set_type_exp(map,found_type,arg)
                                       map =Map.put(map,:return,found_type)
-                                      IO.inspect map
+                                      map
+                                     # IO.inspect map
                   end
                 nil -> raise "Function must have a return."
                 found_type -> #IO.inspect arg
