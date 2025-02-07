@@ -127,7 +127,6 @@ PolyHok.spawn_jit(&NBodies.gpu_nBodies/4,{nBlocks,1,1},{block_size,1,1},[d_buf,d
 PolyHok.spawn_jit(&Integrate.gpu_integrate/3,{nBlocks,1,1},{block_size,1,1},[d_buf,dt,nBodies])
 gpu_resp = PolyHok.get_gnx(d_buf)
 next = System.monotonic_time()
-#IO.inspect _gpu_resp
 
 IO.puts "PolyHok\t#{user_value}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
