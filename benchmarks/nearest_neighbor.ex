@@ -1,5 +1,5 @@
 require Integer
-require Hok
+require PolyHok
 defmodule DataSet do
   def open_data_set(file) do
     {:ok, contents} = File.read(file)
@@ -36,7 +36,7 @@ defmodule DataSet do
 end
 
 
-Hok.defmodule_jit NN do
+PolyHok.defmodule_jit NN do
   include CAS
   def euclid_seq(l,lat,lng), do: euclid_seq_(l,lat,lng,[])
   def euclid_seq_([m_lat,m_lng|array],lat,lng,data) do
@@ -52,15 +52,15 @@ Hok.defmodule_jit NN do
   end
   def reduce(ref, acc, f) do
 
-    {l,c} = Hok.get_shape_gnx(ref)
-    type = Hok.get_type_gnx(ref)
+    {l,c} = PolyHok.get_shape_gnx(ref)
+    type = PolyHok.get_type_gnx(ref)
     size = l*c
-     result_gpu  = Hok.new_gnx(Nx.tensor([[acc]] , type: type))
+     result_gpu  = PolyHok.new_gnx(Nx.tensor([[acc]] , type: type))
 
      threadsPerBlock = 256
      blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
      numberOfBlocks = blocksPerGrid
-     Hok.spawn_jit(&NN.reduce_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
+     PolyHok.spawn_jit(&NN.reduce_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, result_gpu, f, size])
      result_gpu
  end
  defk reduce_kernel(a, ref4, f,n) do
@@ -112,10 +112,10 @@ Hok.defmodule_jit NN do
     end
   end
   def map_step_2para_1resp(d_array,step, par1, par2, size, f) do
-    type = Hok.get_type_gnx(d_array)
+    type = PolyHok.get_type_gnx(d_array)
 
-      distances_device = Hok.new_gnx(1,size, type)
-      Hok.spawn_jit(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
+      distances_device = PolyHok.new_gnx(1,size, type)
+      PolyHok.spawn_jit(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
       distances_device
   end
   defh euclid(d_locations, lat, lng) do
@@ -147,26 +147,26 @@ IO.inspect data_set_host
 #tensor = Nx.tensor([Enum.reverse(Enum.to_list(1..500))++ [-1]++ Enum.reverse(Enum.to_list(1..500))], type: {:f,32})
 
 #tensor
-#|> Hok.new_gnx
+#|> PolyHok.new_gnx
 #|> NN.reduce(&NN.menor/2)
-#|> Hok.get_gnx
+#|> PolyHok.get_gnx
 #|> IO.inspect
 
 #raise "hell"
 
 prev = System.monotonic_time()
-data_set_device = Hok.new_gnx(data_set_host)
+data_set_device = PolyHok.new_gnx(data_set_host)
 
 data_set_device
       |> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
       |> NN.reduce(50000.0,&NN.menor/2)
-      |> Hok.get_gnx
+      |> PolyHok.get_gnx
       |> IO.inspect
 
 
 
 next = System.monotonic_time()
-IO.puts "Hok\t#{size}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
+IO.puts "PolyHok\t#{size}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
 #result_elixir = Enum.reverse(NN.euclid_seq(list_data_set,0.0,0.0))
 
