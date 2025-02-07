@@ -42,7 +42,6 @@ PolyHok.defmodule_jit Julia do
     ptr[offset*4 + 1] = 0;
     ptr[offset*4 + 2] = 0;
     ptr[offset*4 + 3] = 255;
-    return 1
   end
 
 
