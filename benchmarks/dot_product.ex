@@ -34,7 +34,7 @@ include CAS
       threadsPerBlock = 256
       blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
       numberOfBlocks = blocksPerGrid
-      PolyHok.spawn_jit(&DP.reduce_kernel/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, initial,result_gpu, f, size])
+      PolyHok.spawn_jit(&DP.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, initial,result_gpu, f, size])
       result_gpu
   end
   defk reduce_kernel(a, initial, ref4, f,n) do
