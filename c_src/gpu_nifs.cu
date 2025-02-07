@@ -352,7 +352,7 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
       CUdeviceptr *array_res;
       enif_get_resource(env, head_args, ARRAY_TYPE, (void **) &array_res);
       arrays[arrays_ptr] = *array_res;
-      printf("pointer %p\n",arrays[arrays_ptr]);
+      //printf("pointer %p\n",arrays[arrays_ptr]);
       args[i] = (void*)  &arrays[arrays_ptr];
       arrays_ptr++;
     
