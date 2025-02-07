@@ -15,7 +15,7 @@ defmodule PolyHok.TypeInference do
         #IO.inspect notinfer2
         #raise "Could not find types! Please use type annotations of the form: var x float, where x is an identifier"
 
-        IO.puts "Could not find types, choosing type float."
+        IO.puts "Could not find types, choosing type float.."
         IO.inspect types
         map =for {var, type} <- types, into: %{} do if(type == :none)do {var, :float} else {var,type}  end end
         #IO.inspect map
