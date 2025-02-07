@@ -1,6 +1,6 @@
-require Hok
+require PolyHok
 
-Hok.defmodule_jit NBodies do
+PolyHok.defmodule_jit NBodies do
 
   defk gpu_nBodies(p,dt,n,softening) do
     i = blockDim.x * blockIdx.x + threadIdx.x
@@ -113,19 +113,19 @@ size_body = 6
 size_array = size_body * nBodies
 
 
-#h_buf = Hok.new_nx_from_function(1,size_array,{:f,32},fn -> :rand.uniform() end )
+#h_buf = PolyHok.new_nx_from_function(1,size_array,{:f,32},fn -> :rand.uniform() end )
 
-h_buf = Hok.new_nx_from_function(1,size_array,{:f,32},fn -> 1 end )
+h_buf = PolyHok.new_nx_from_function(1,size_array,{:f,32},fn -> 1 end )
 
 prev = System.monotonic_time()
 
-d_buf = Hok.new_gnx(h_buf)
+d_buf = PolyHok.new_gnx(h_buf)
 
 
-Hok.spawn_jit(&NBodies.gpu_nBodies/4,{nBlocks,1,1},{block_size,1,1},[d_buf,dt,nBodies,softening])
+PolyHok.spawn_jit(&NBodies.gpu_nBodies/4,{nBlocks,1,1},{block_size,1,1},[d_buf,dt,nBodies,softening])
 
-Hok.spawn_jit(&Integrate.gpu_integrate/3,{nBlocks,1,1},{block_size,1,1},[d_buf,dt,nBodies])
-_gpu_resp = Hok.get_gnx(d_buf)
+PolyHok.spawn_jit(&Integrate.gpu_integrate/3,{nBlocks,1,1},{block_size,1,1},[d_buf,dt,nBodies])
+_gpu_resp = PolyHok.get_gnx(d_buf)
 next = System.monotonic_time()
 IO.inspect _gpu_resp
 
