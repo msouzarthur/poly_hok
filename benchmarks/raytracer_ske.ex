@@ -1,4 +1,4 @@
-require Hok
+require PolyHok
 
 defmodule BMP do
   @on_load :load_nifs
@@ -21,7 +21,7 @@ end
   end
 end
 
-Hok.defmodule_jit RayTracer do
+PolyHok.defmodule_jit RayTracer do
 
 
 defh raytracing(image, width,  spheres ,x,y) do
@@ -87,7 +87,7 @@ defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
 end
 def mapxy_2D_para_no_resp(d_array,  step,par1, par2, size, f) do
 
-    Hok.spawn_jit(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{trunc(size/16),trunc(size/16),1},{16,16,1},[d_array,step,par1,par2,size,f])
+    PolyHok.spawn_jit(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{trunc(size/16),trunc(size/16),1},{16,16,1},[d_array,step,par1,par2,size,f])
     d_array
 end
 
@@ -168,14 +168,14 @@ defmodule Main do
 
         prev = System.monotonic_time()
 
-        ref_sphere = Hok.new_gnx(sphereList)
-        ref_image = Hok.new_gnx(1,width * height  * 4,{:s,32})
+        ref_sphere = PolyHok.new_gnx(sphereList)
+        ref_image = PolyHok.new_gnx(1,width * height  * 4,{:s,32})
 
         RayTracer.mapxy_2D_para_no_resp(ref_image, 4,width, ref_sphere, width, &RayTracer.raytracing/5)
 
-       # Hok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
+       # PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
 
-        image = Hok.get_gnx(ref_image)
+        image = PolyHok.get_gnx(ref_image)
 
         next = System.monotonic_time()
         IO.puts "PolyHok\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "

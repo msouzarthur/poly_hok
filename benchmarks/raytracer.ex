@@ -1,4 +1,4 @@
-require Hok
+require PolyHok
 import Bitwise
 
 #Random.seed(313)
@@ -24,7 +24,7 @@ end
   end
 end
 
-Hok.defmodule_jit RayTracer do
+PolyHok.defmodule_jit RayTracer do
 
 
 defk raytracing(width, height, spheres, image) do
@@ -195,12 +195,12 @@ defmodule Main do
 
         prev = System.monotonic_time()
 
-        refSphere = Hok.new_gnx(sphereList)
-        refImag = Hok.new_gnx(1,width * height  * 4,{:s,32})
+        refSphere = PolyHok.new_gnx(sphereList)
+        refImag = PolyHok.new_gnx(1,width * height  * 4,{:s,32})
 
-        Hok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
+        PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
 
-        image = Hok.get_gnx(refImag)
+        image = PolyHok.get_gnx(refImag)
 
         next = System.monotonic_time()
         IO.puts "GPotion\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
