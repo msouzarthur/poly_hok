@@ -1,4 +1,4 @@
-require Hok.CudaBackend
+require PolyHok.CudaBackend
 
 defmodule JIT do
 
