@@ -75,7 +75,7 @@ m = String.to_integer(arg)
 
 dim = m
 
-values_per_pixel = 4
+#values_per_pixel = 4
 
 result_gpu = PolyHok.new_gnx(dim*dim,4,{:s,32})
 
@@ -88,4 +88,4 @@ next = System.monotonic_time()
 
 IO.puts "PolyHok\t#{dim}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
-#BMP.gen_bmp('julia2gpotion.bmp',dim,image)
+BMP.gen_bmp_int('juliaske.bmp',dim,image)
