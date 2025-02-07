@@ -76,6 +76,9 @@ defmodule PolyHok.TypeInference do
       end
     end
   end
+  defp check_return([h|t]) do
+    [h|check_return t]
+  end
   defp check_return([com]) do
     case com do
           {:return,_,_} -> [com]
@@ -100,9 +103,7 @@ defmodule PolyHok.TypeInference do
                   end
     end
   end
-  defp check_return([h|t]) do
-    [h|check_return t]
-  end
+
   defp is_exp?(exp) do
     case exp do
       {{:., _info, [Access, :get]}, _, [_arg1,_arg2]} -> true
