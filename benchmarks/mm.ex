@@ -1,7 +1,7 @@
 
-require Hok
+require PolyHok
 
-Hok.defmodule_jit MM do
+PolyHok.defmodule_jit MM do
 
 defk map2xy2D_kernel(arr1,arr2,par, resp,size,f) do
   row  = blockIdx.y * blockDim.y + threadIdx.y
@@ -16,18 +16,18 @@ def map2xy2D1p(arr1,arr2,par,resp,size,f) do
   grid_rows = trunc ((size + block_size - 1) / block_size)
   grid_cols = trunc ((size + block_size - 1) / block_size)
 
-  Hok.spawn_jit(&MM.map2xy2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[arr1,arr2,par,resp,size,f])
+  PolyHok.spawn_jit(&MM.map2xy2D_kernel/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[arr1,arr2,par,resp,size,f])
 end
 def comp2xy2D1p(arr1,arr2,par,size1,size2,f) do
 
 
-    result_gpu = Hok.new_gnx(size1,size2,Hok.get_array_type(arr1))
-    arr1_gpu = Hok.new_gnx(arr1)
-    arr2_gpu = Hok.new_gnx(arr2)
+    result_gpu = PolyHok.new_gnx(size1,size2,PolyHok.get_array_type(arr1))
+    arr1_gpu = PolyHok.new_gnx(arr1)
+    arr2_gpu = PolyHok.new_gnx(arr2)
 
     MM.map2xy2D1p(arr1_gpu, arr2_gpu,par, result_gpu, size1,f)
 
-    r_gpu = Hok.get_gnx(result_gpu)
+    r_gpu = PolyHok.get_gnx(result_gpu)
     r_gpu
 end
 end
@@ -45,14 +45,14 @@ m = String.to_integer(arg)
 #mat1 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 #mat2 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 
-mat1 = Hok.new_nx_from_function(1,m*m,{:f,64},fn -> :rand.uniform(1000) end )
-mat2 = Hok.new_nx_from_function(1,m*m,{:f,64},fn -> :rand.uniform(1000) end)
+mat1 = PolyHok.new_nx_from_function(1,m*m,{:f,64},fn -> :rand.uniform(1000) end )
+mat2 = PolyHok.new_nx_from_function(1,m*m,{:f,64},fn -> :rand.uniform(1000) end)
 
 prev = System.monotonic_time()
 
 
 
-_result = Hok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
+_result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
             sum = 0
             for i in range(0,m,1) do
                   sum = sum + mat1[x * m + i] * mat2[i * m + y]
@@ -62,14 +62,14 @@ _result = Hok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
 
 next = System.monotonic_time()
 
-IO.puts "Hok\t#{m}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
+IO.puts "PolyHok\t#{m}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
 
 #IO.inspect result
 
 #IO.inspect Nx.sum(result)
 
-#Hok.null(mat1)
-#Hok.null(mat2)
+#PolyHok.null(mat1)
+#PolyHok.null(mat2)
 #m1 = Matrex.reshape(mat1,m,m)
 #m2 = Matrex.reshape(mat2,m,m)
 #res_cpu = Matrex.dot(m1,m2)
