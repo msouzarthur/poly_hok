@@ -252,13 +252,13 @@ def new_gnx(%Nx.Tensor{data: data, type: type, shape: shape, names: name}) do
   {:nx, type, shape, name , ref}
 end
 def new_gnx(%Matrex{data: matrix} = a) do
-  IO.puts "aqui!"
+  #IO.puts "aqui!"
     <<l::unsigned-integer-little-32,c::unsigned-integer-little-32,z::binary>> = matrix
     ref = create_gpu_array_nx_nif(z,l,c,Kernel.to_charlist("float"))
   {:matrex, ref, Matrex.size(a)}
 end
 def new_gnx(l,c,type) do
-  IO.puts "aque"
+ # IO.puts "aque"
   ref = case type do
     {:f,32} -> new_gpu_array_nif(l,c,Kernel.to_charlist("float"))
     {:f,64} -> new_gpu_array_nif(l,c,Kernel.to_charlist("double"))
