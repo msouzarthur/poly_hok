@@ -32,6 +32,7 @@ PolyHok.defmodule_jit Julia do
         ar = nar
         ai = nai
     end
+    return 1
   end
   defh julia_function(ptr,x,y,dim) do
     offset = x + y * dim # gridDim.x
