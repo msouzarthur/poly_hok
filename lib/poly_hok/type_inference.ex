@@ -40,6 +40,7 @@ defmodule PolyHok.TypeInference do
                         else
                           [{v,{rt, list}} | not_infered(t)]
                         end
+      {_,_} -> not_infered(t)
     end
   end
   #defmacro tinf(header, do: body) do
