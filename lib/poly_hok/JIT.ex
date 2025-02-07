@@ -14,7 +14,7 @@ defmodule JIT do
 
 
     param_list = para
-        |> Enum.map(fn {p, _, _}-> Hok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
+        |> Enum.map(fn {p, _, _}-> PolyHok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
         |> Enum.join(", ")
 
     param_vars = para
@@ -23,8 +23,8 @@ defmodule JIT do
 
     fun_type =  Map.get(inf_types,:return)
 
-    cuda_body = Hok.CudaBackend.gen_cuda_jit(body,inf_types,param_vars,"module",MapSet.new())
-    k =        Hok.CudaBackend.gen_function(fname,param_list,cuda_body,fun_type)
+    cuda_body = PolyHok.CudaBackend.gen_cuda_jit(body,inf_types,param_vars,"module",MapSet.new())
+    k =        PolyHok.CudaBackend.gen_function(fname,param_list,cuda_body,fun_type)
 
     function = "\n" <> k <> "\n\n"
 
@@ -32,7 +32,7 @@ defmodule JIT do
 end
 def compile_function({name,type}) do
  # IO.puts "Compile function: #{name}"
-  nast = Hok.load_ast(name)
+  nast = PolyHok.load_ast(name)
   case nast do
     nil -> [""]
     {fast,fun_graph} ->
@@ -46,7 +46,7 @@ def compile_function({name,type}) do
           {fname, _, para} = header
 
           param_list = para
-              |> Enum.map(fn {p, _, _}-> Hok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
+              |> Enum.map(fn {p, _, _}-> PolyHok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
               |> Enum.join(", ")
 
           param_vars = para
@@ -56,8 +56,8 @@ def compile_function({name,type}) do
           fun_type =  Map.get(inf_types,:return)
           fun_type = if (fun_type == :unit) do :void else fun_type end
 
-          cuda_body = Hok.CudaBackend.gen_cuda_jit(body,inf_types,param_vars,"module",MapSet.new())
-          k =        Hok.CudaBackend.gen_function(fname,param_list,cuda_body,fun_type)
+          cuda_body = PolyHok.CudaBackend.gen_cuda_jit(body,inf_types,param_vars,"module",MapSet.new())
+          k =        PolyHok.CudaBackend.gen_function(fname,param_list,cuda_body,fun_type)
 
           function = "\n" <> k <> "\n\n"
 
@@ -79,7 +79,7 @@ def compile_kernel({:defk,_,[header,[body]]},inf_types,subs) do
   {fname, _, para} = header
 
   param_list = para
-      |> Enum.map(fn {p, _, _}-> Hok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
+      |> Enum.map(fn {p, _, _}-> PolyHok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
       |> Enum.filter(fn p -> p != nil end)
       |> Enum.join(", ")
 
@@ -94,9 +94,9 @@ def compile_kernel({:defk,_,[header,[body]]},inf_types,subs) do
   #                            _ -> true
   #                  end end)
 
-   cuda_body = Hok.CudaBackend.gen_cuda_jit(body,inf_types,param_vars,"module",subs)
-   k = Hok.CudaBackend.gen_kernel_jit(fname,param_list,cuda_body)
-   #accessfunc = Hok.CudaBackend.gen_kernel_call(fname,length(types_para),Enum.reverse(types_para))
+   cuda_body = PolyHok.CudaBackend.gen_cuda_jit(body,inf_types,param_vars,"module",subs)
+   k = PolyHok.CudaBackend.gen_kernel_jit(fname,param_list,cuda_body)
+   #accessfunc = PolyHok.CudaBackend.gen_kernel_call(fname,length(types_para),Enum.reverse(types_para))
    #IO.puts accessfunc
    "\n" <> k <> "\n\n" # <> accessfunc
 end
@@ -173,14 +173,14 @@ def get_function_name(fun) do
   f_name
 end
 def infer_types({:defk,_,[_header,[body]]},delta) do
-  Hok.TypeInference.type_check(delta,body)
+  PolyHok.TypeInference.type_check(delta,body)
 end
 def infer_types({:defh,_,[_header,[body]]},delta) do
-  Hok.TypeInference.type_check(delta,body)
+  PolyHok.TypeInference.type_check(delta,body)
 end
 def infer_types({:fn, _, [{:->, _ , [_para,body]}] },delta) do
 
-  Hok.TypeInference.type_check(delta,body)
+  PolyHok.TypeInference.type_check(delta,body)
 end
   # finds the types of the actual parameters and generates a maping of formal parameters to their types
 def gen_types_delta({:defk,_,[header,[_body]]}, actual_param) do
@@ -235,9 +235,9 @@ def load_kernel(kernel) do
              # IO.puts module
               #raise "hell"
               #module_name=String.slice("#{module}",7..-1//1) # Eliminates Elixir.
-              Hok.load_kernel_nif(to_charlist("Elixir.#{kernelname}"),to_charlist("#{kernelname}"))
+              PolyHok.load_kernel_nif(to_charlist("Elixir.#{kernelname}"),to_charlist("#{kernelname}"))
 
-    _ -> raise "Hok.build: invalid kernel"
+    _ -> raise "PolyHok.build: invalid kernel"
   end
 end
 def get_kernel_name(kernel) do
@@ -246,7 +246,7 @@ def get_kernel_name(kernel) do
 
 
 
-    _ -> raise "Hok.build: invalid kernel"
+    _ -> raise "PolyHok.build: invalid kernel"
   end
 end
 #####
@@ -312,8 +312,8 @@ defp process_definitions(module_name,[h|t]) do
                                       #  IO.inspect "Process definitions: #{fname}"
 
 
-                                        body = Hok.TypeInference.add_return(Map.put(%{}, :return, :none), body)
-                                        #body = Hok.CudaBackend.add_return( body)
+                                        body = PolyHok.TypeInference.add_return(Map.put(%{}, :return, :none), body)
+                                        #body = PolyHok.CudaBackend.add_return( body)
                                    #     IO.inspect body
                                         funs = find_functions({:defh , ii, [header,[body]]})
                                        # IO.inspect "Function graph: #{inspect funs}"
@@ -523,19 +523,19 @@ def gen_jit_kernel_load({:defk,_,[header,[body]]}, is_typed, inf_types) do
   {kname, _, para} = header
 
   param_list = para
-       |> Enum.map(fn {p, _, _}-> Hok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
+       |> Enum.map(fn {p, _, _}-> PolyHok.CudaBackend.gen_para(p,Map.get(inf_types,p)) end)
        |> Enum.join(", ")
 
   types_para = para
        |>  Enum.map(fn {p, _, _}-> Map.get(inf_types,p) end)
 
 
-  fname = "ker_" <> Hok.CudaBackend.gen_lambda_name()
+  fname = "ker_" <> PolyHok.CudaBackend.gen_lambda_name()
   #fname = "k072b2a4iad"
-  #fname = Hok.CudaBackend.gen_lambda_name()
-  cuda_body = Hok.CudaBackend.gen_cuda(body,inf_types,is_typed,"")
-  k = Hok.CudaBackend.gen_kernel(fname,param_list,cuda_body)
-  accessfunc = Hok.CudaBackend.gen_kernel_call(fname,length(para),Enum.reverse(types_para))
+  #fname = PolyHok.CudaBackend.gen_lambda_name()
+  cuda_body = PolyHok.CudaBackend.gen_cuda(body,inf_types,is_typed,"")
+  k = PolyHok.CudaBackend.gen_kernel(fname,param_list,cuda_body)
+  accessfunc = PolyHok.CudaBackend.gen_kernel_call(fname,length(para),Enum.reverse(types_para))
   code = "\n" <> k <> "\n\n" <> accessfunc
 
  # IO.puts code
@@ -552,12 +552,12 @@ def gen_jit_kernel_load({:defk,_,[header,[body]]}, is_typed, inf_types) do
     ], stderr_to_stdout: true)
 
 
-    if ((errcode == 1) || (errcode ==2)) do raise "Error when JIT compiling .cu file generated by Hok: #{kname}\n #{result}" end
+    if ((errcode == 1) || (errcode ==2)) do raise "Error when JIT compiling .cu file generated by PolyHok: #{kname}\n #{result}" end
     IO.puts "antes"
-    r = Hok.load_kernel_nif(to_charlist("Elixir.App"),to_charlist("#{fname}"))
+    r = PolyHok.load_kernel_nif(to_charlist("Elixir.App"),to_charlist("#{fname}"))
     IO.puts "depois"
-    #Hok.load_kernel_nif(to_charlist("Elixir.App"),to_charlist("map_kernel"))
-    #Hok.load_fun_nif(to_charlist("Elixir.App"),to_charlist("#{fname}_call"))
+    #PolyHok.load_kernel_nif(to_charlist("Elixir.App"),to_charlist("map_kernel"))
+    #PolyHok.load_fun_nif(to_charlist("Elixir.App"),to_charlist("#{fname}_call"))
     r
 end
 ############## Removing from kernel definition the arguments that are functions
