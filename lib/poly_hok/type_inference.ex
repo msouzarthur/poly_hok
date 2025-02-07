@@ -33,7 +33,7 @@ defmodule PolyHok.TypeInference do
   defp not_infered([h|t]) do
     case h do
       {v, :none}  -> [{v, :none} |not_infered(t) ]
-      {v {:none, list}} -> [{v ,{:none, list}}| not_infered(t)]
+      {v, {:none, list}} -> [{v ,{:none, list}}| not_infered(t)]
       {v,{rt, list}} -> fil = Enum.filter(list, fn x -> x == :none end)
                         if fil == [] do
                           not_infered(t)
