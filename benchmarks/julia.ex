@@ -1,4 +1,4 @@
-require Hok
+require PolyHok
 defmodule BMP do
   @on_load :load_nifs
   def load_nifs do
@@ -13,7 +13,7 @@ defmodule BMP do
   end
 end
 
-Hok.defmodule_jit Julia do
+PolyHok.defmodule_jit Julia do
   defh julia(x,y,dim) do
     scale  = 0.1
     jx = scale * (dim - x)/dim
@@ -58,7 +58,7 @@ Hok.defmodule_jit Julia do
 
 
 
-    Hok.spawn_jit(&Julia.mapgen2D_xy_1para_noret_ker/4,{size,size,1},{1,1,1},[result_gpu,arg1,size,f])
+    PolyHok.spawn_jit(&Julia.mapgen2D_xy_1para_noret_ker/4,{size,size,1},{1,1,1},[result_gpu,arg1,size,f])
     result_gpu
   end
 end
@@ -71,15 +71,15 @@ dim = m
 
 values_per_pixel = 4
 
-result_gpu = Hok.new_gnx(dim*dim,4,{:s,32})
+result_gpu = PolyHok.new_gnx(dim*dim,4,{:s,32})
 
 prev = System.monotonic_time()
 
 image = Julia.mapgen2D_step_xy_1para_noret(result_gpu,4,dim,dim, &Julia.julia_function/4)
-  |> Hok.get_gnx
+  |> PolyHok.get_gnx
 
 next = System.monotonic_time()
 
-IO.puts "Hok\t#{dim}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
+IO.puts "PolyHok\t#{dim}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
 #BMP.gen_bmp('julia2gpotion.bmp',dim,image)
