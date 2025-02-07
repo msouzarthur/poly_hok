@@ -439,7 +439,7 @@ defp find_function_calls_command(map,code) do
         else
            {args,MapSet.put(funs,fun)}
         end
-      number when is_integer(number) or is_float(number) -> raise "Error: number is a command"
+      number when is_integer(number) or is_float(number) -> raise "Error: #{inspect number} is a command"
       {str,i1 ,a } -> {str,i1 ,a }
 
   end
