@@ -269,7 +269,7 @@ defmodule PolyHok.TypeInference do
                   case inf_type do
                       :none -> map
                        found_type ->  map = set_type_exp(map,found_type,arg)
-                                      map
+                                      IO.inspect map
                   end
                 nil -> raise "Function must have a return."
                 found_type -> #IO.inspect arg
