@@ -3,13 +3,13 @@ require PolyHok.CudaBackend
 defmodule JIT do
 
   def compile_function({:anon,fname,code,type}) do
-    IO.puts "Compile function: #{fname}"
+   # IO.puts "Compile function: #{fname}"
 
     delta = gen_delta_from_type(code,type)
-    IO.inspect "Delta: #{inspect delta}"
+   # IO.inspect "Delta: #{inspect delta}"
 
     inf_types = JIT.infer_types(code,delta)
-    IO.inspect "inf_types: #{inspect inf_types}"
+   # IO.inspect "inf_types: #{inspect inf_types}"
     {:fn, _, [{:->, _ , [para,body]}] } = code
 
 
@@ -31,17 +31,17 @@ defmodule JIT do
     [function]
 end
 def compile_function({name,type}) do
- # IO.puts "Compile function: #{name}"
+  IO.puts "Compile function: #{name}"
   nast = PolyHok.load_ast(name)
   case nast do
     nil -> [""]
     {fast,fun_graph} ->
           delta = gen_delta_from_type(fast,type)
-  #        IO.inspect "Delta: #{inspect delta}"
-   #       IO.inspect "Type: #{inspect type}"
+          IO.inspect "Delta: #{inspect delta}"
+          IO.inspect "Type: #{inspect type}"
     #      IO.inspect "Call graph: #{inspect fun_graph}"
           inf_types = JIT.infer_types(fast,delta)
-          #IO.inspect "inf_types: #{inspect inf_types}"
+          IO.inspect "inf_types: #{inspect inf_types}"
           {:defh,_iinfo,[header,[body]]} = fast
           {fname, _, para} = header
 
