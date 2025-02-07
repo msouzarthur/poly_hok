@@ -51,7 +51,7 @@ PolyHok.defmodule_jit Julia do
     y = blockIdx.y * blockDim.y + threadIdx.y
 
     if(x < size && y < size) do
-      v=f(resp,x,y,arg1)
+      f(resp,x,y,arg1)
     end
   end
   def mapgen2D_step_xy_1para_noret(result_gpu,step, arg1, size,f) do
