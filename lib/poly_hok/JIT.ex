@@ -3,13 +3,13 @@ require PolyHok.CudaBackend
 defmodule JIT do
 
   def compile_function({:anon,fname,code,type}) do
-   # IO.puts "Compile function: #{fname}"
+    IO.puts "Compile function: #{fname}"
 
     delta = gen_delta_from_type(code,type)
-    #IO.inspect "Delta: #{inspect delta}"
+    IO.inspect "Delta: #{inspect delta}"
 
     inf_types = JIT.infer_types(code,delta)
-    #IO.inspect "inf_types: #{inspect inf_types}"
+    IO.inspect "inf_types: #{inspect inf_types}"
     {:fn, _, [{:->, _ , [para,body]}] } = code
 
 
