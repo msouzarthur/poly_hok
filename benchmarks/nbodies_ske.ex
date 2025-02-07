@@ -1,6 +1,6 @@
-require Hok
+require PolyHok
 
-Hok.defmodule_jit NBodies do
+PolyHok.defmodule_jit NBodies do
 
   defh gpu_nBodies(p,c,n) do
     softening = 0.000000001
@@ -43,10 +43,10 @@ Hok.defmodule_jit NBodies do
   end
   def map_2_para_no_resp(d_array,  par1, par2, size, f) do
     block_size =  128;
-    {_l,step} = Hok.get_shape_gnx(d_array)
+    {_l,step} = PolyHok.get_shape_gnx(d_array)
     nBlocks = floor ((size + block_size - 1) / block_size)
 
-      Hok.spawn_jit(&NBodies.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,size,f])
+      PolyHok.spawn_jit(&NBodies.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,size,f])
       d_array
   end
   def nbodies(-1,p,_dt,_softening,_n) do
@@ -126,20 +126,20 @@ size_body = 6
 
 
 
-#h_buf = Hok.new_nx_from_function(nBodies,size_body,{:f,32},fn -> :rand.uniform() end )
+#h_buf = PolyHok.new_nx_from_function(nBodies,size_body,{:f,32},fn -> :rand.uniform() end )
 
-h_buf = Hok.new_nx_from_function(nBodies,size_body,{:f,32},fn -> 1 end )
+h_buf = PolyHok.new_nx_from_function(nBodies,size_body,{:f,32},fn -> 1 end )
 
 #IO.inspect h_buf
 
 prev = System.monotonic_time()
 
-d_buf = Hok.new_gnx(h_buf)
+d_buf = PolyHok.new_gnx(h_buf)
 
 _gpu_resp = d_buf
   |> NBodies.map_2_para_no_resp(d_buf,nBodies,nBodies, &NBodies.gpu_nBodies/3)
   |> NBodies.map_2_para_no_resp( 0.01,nBodies,nBodies, &NBodies.gpu_integrate/3)
-  |> Hok.get_gnx
+  |> PolyHok.get_gnx
   |> IO.inspect
 
   next = System.monotonic_time()
