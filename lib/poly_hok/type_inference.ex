@@ -15,9 +15,10 @@ defmodule PolyHok.TypeInference do
         #IO.inspect notinfer2
         #raise "Could not find types! Please use type annotations of the form: var x float, where x is an identifier"
 
-        IO.puts "Could not find types, choosing type float.."
+        #IO.puts "Could not find types, choosing type float.."
         IO.inspect types
-        map =for {var, type} <- types, into: %{} do if(type == :none)do {var, :float} else {var,type}  end end
+        raise "Could not find types."
+        #map =for {var, type} <- types, into: %{} do if(type == :none)do {var, :float} else {var,type}  end end
         #IO.inspect map
         #raise "hell"
         map
@@ -32,7 +33,13 @@ defmodule PolyHok.TypeInference do
   defp not_infered([h|t]) do
     case h do
       {v, :none}  -> [{v, :none} |not_infered(t) ]
-      {_,_}       -> not_infered(t)
+      {v {:none, list}} -> [{v {:none, list}}| not_infered(t)]
+      {v,{rt, list}} -> fil = Enum.filter(list, fn x -> x == :none end)
+                        if fil == [] do
+                          not_infered(t)
+                        else
+                          [{v,{rt, list}} | not_infered(t)]
+                        end
     end
   end
   #defmacro tinf(header, do: body) do
