@@ -381,9 +381,9 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
    //CUdeviceptr *dev_array = (CUdeviceptr*) args[1];
    //err=  cuMemcpyDtoH(ptr_matrix, dev_array, 3*sizeof(int)) ;
    // printf("pointer %p\n",*dev_array);
-    printf("blah %p\n",args[0]);
+  //  printf("blah %p\n",args[0]);
     if(err != CUDA_SUCCESS)  
-      { char message[200];printf("its ok\n");
+      { char message[200];//printf("its ok\n");
         const char *error;
         cuGetErrorString(err, &error);
         strcpy(message,"Error get_gpu_array_nif: ");
@@ -414,7 +414,7 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
   CUresult err;
 
  init_cuda(env);
- printf("entrou get array\n");
+// printf("entrou get array\n");
   CUdeviceptr *array_res;
 
     if (!enif_get_resource(env, argv[0], ARRAY_TYPE, (void **) &array_res)) {
@@ -478,12 +478,12 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
     ptr_matrix = result_data;
     
     //// MAKE CUDA CALL
-      printf("cuda get\n");
-      printf("pointer %p\n",dev_array);
+     // printf("cuda get\n");
+     // printf("pointer %p\n",dev_array);
     err=  cuMemcpyDtoH(ptr_matrix, dev_array, data_size) ;
     
     if(err != CUDA_SUCCESS)  
-      { char message[200]; printf("cuda get\n");
+      { char message[200]; //printf("cuda get\n");
         const char *error;
         cuGetErrorString(err, &error);
         strcpy(message,"Error get_gpu_array_nif: ");
@@ -763,7 +763,7 @@ static ERL_NIF_TERM new_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
 
      //END CUDA CALL
 
-  printf("pointer %p\n",dev_array);
+ // printf("pointer %p\n",dev_array);
     
   } else if (strcmp(type_name, "double") == 0)
   {
