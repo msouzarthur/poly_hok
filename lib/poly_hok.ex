@@ -1,4 +1,4 @@
-defmodule PoyHok do
+defmodule PolyHok do
   @on_load :load_nifs
   def load_nifs do
       :erlang.load_nif('./priv/gpu_nifs', 0)
