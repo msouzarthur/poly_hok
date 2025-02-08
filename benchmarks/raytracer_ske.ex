@@ -75,7 +75,7 @@ end
 
 defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
 
-   x = threadIdx.x + blockIdx.x * blockDim.x
+  x = threadIdx.x + blockIdx.x * blockDim.x
   y = threadIdx.y + blockIdx.y * blockDim.y
   offset = x + y * blockDim.x * gridDim.x
 
