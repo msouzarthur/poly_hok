@@ -181,7 +181,7 @@ int main(int argc, char *argv[]){
     cudaEventElapsedTime(&time, start, stop) ;
 
      printf("CUDA\t%d\t%3.1f\n", dim,time);
-     genBpm(dim,dim,final_image);
+     //genBpm(dim,dim,final_image);
     
     free(temp_s);
     free(final_image);
