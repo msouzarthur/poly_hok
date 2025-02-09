@@ -81,11 +81,11 @@ result_gpu = PolyHok.new_gnx(dim*dim,4,{:s,32})
 
 prev = System.monotonic_time()
 
-image = Julia.mapgen2D_step_xy_1para_noret(result_gpu,4,dim,dim, &Julia.julia_function/4)
+_image = Julia.mapgen2D_step_xy_1para_noret(result_gpu,4,dim,dim, &Julia.julia_function/4)
   |> PolyHok.get_gnx
 
 next = System.monotonic_time()
 
 IO.puts "PolyHok\t#{dim}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
-BMP.gen_bmp_int('juliaske.bmp',dim,image)
+#BMP.gen_bmp_int('juliaske.bmp',dim,image)
