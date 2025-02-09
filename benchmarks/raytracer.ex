@@ -203,7 +203,7 @@ defmodule Main do
         image = PolyHok.get_gnx(refImag)
 
         next = System.monotonic_time()
-        IO.puts "GPotion\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
+        IO.puts "PolyHok\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
 
 
         BMP.gen_bmp_int('ray.bmp',width,image)
