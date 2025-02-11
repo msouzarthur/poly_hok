@@ -39,7 +39,18 @@ void gpu_integrate(double *p, float dt, int n)
 }
 
 
-extern "C" __global__ void map_step_2_para_no_resp_kernel(double *d_array, int step, float par1, int par2, int size)
+__global__ void map1(double *d_array, int step, double *par1, int par2, int size)
+{
+	int globalId = ((blockDim.x * ((gridDim.x * blockIdx.y) + blockIdx.x)) + threadIdx.x);
+	int id = (step * globalId);
+if((globalId < size))
+{
+gpu_nBodies((d_array + id), par1, par2);
+}
+
+}
+
+__global__ void map2(double *d_array, int step, float par1, int par2, int size)
 {
 	int globalId = ((blockDim.x * ((gridDim.x * blockIdx.y) + blockIdx.x)) + threadIdx.x);
 	int id = (step * globalId);
@@ -106,7 +117,8 @@ int main(const int argc, const char** argv) {
  
 
    ////////////////////
-    gpu_bodyForce<<<nBlocks, block_size>>>(d_buf, dt, nBodies,softening); // compute interbody forces
+    map1<<<nBlocks, block_size>>>(d_buf,6,d_buf, nBodies,nBodies)
+  
     nb_error = cudaGetLastError();
     if(nb_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(nb_error));
   //////// 
@@ -116,7 +128,8 @@ int main(const int argc, const char** argv) {
     if(nb_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(nb_error));
   ////////
 
-   gpu_integrate<<<nBlocks, block_size>>>(d_buf, dt, nBodies); // compute interbody forces
+
+   map2<<<nBlocks, block_size>>>(d_buf, 6, 0.01, nBodies); // compute interbody forces
     nb_error = cudaGetLastError();
     if(nb_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(nb_error));
    
