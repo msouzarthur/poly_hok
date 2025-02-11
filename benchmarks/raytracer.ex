@@ -1,7 +1,4 @@
 require PolyHok
-import Bitwise
-
-#Random.seed(313)
 
 defmodule BMP do
   @on_load :load_nifs
@@ -14,11 +11,11 @@ defmodule BMP do
   def gen_bmp_float_nif(_string,_dim,_mat) do
     raise "gen_bmp_nif not implemented"
 end
-  def gen_bmp_int(string,dim,%Nx.Tensor{data: data, type: type, shape: shape, names: name}) do
+  def gen_bmp_int(string,dim,%Nx.Tensor{data: data, type: _type, shape: _shape, names: _name}) do
     %Nx.BinaryBackend{ state: array} = data
     gen_bmp_int_nif(string,dim,array)
   end
-  def gen_bmp_float(string,dim,%Nx.Tensor{data: data, type: type, shape: shape, names: name}) do
+  def gen_bmp_float(string,dim,%Nx.Tensor{data: data, type: _type, shape: _shape, names: _name}) do
     %Nx.BinaryBackend{ state: array} = data
     gen_bmp_float_nif(string,dim,array)
   end
@@ -27,16 +24,14 @@ end
 PolyHok.defmodule_jit RayTracer do
 
 
-defk raytracing(width, height, spheres, image) do
+defh raytracing(image, width,  spheres ,x,y) do
 
-  x = threadIdx.x + blockIdx.x * blockDim.x
-  y = threadIdx.y + blockIdx.y * blockDim.y
-  offset = x + y * blockDim.x * gridDim.x
+
 
   ox = 0.0
   oy = 0.0
   ox = (x - width/2)
-  oy = (y - height/2)
+  oy = (y - width/2)
 
   r = 0.0
   g = 0.0
@@ -71,54 +66,32 @@ defk raytracing(width, height, spheres, image) do
     end
   end
 
-  image[offset * 4 + 0] = r * 255
-  image[offset * 4 + 1] = g * 255
-  image[offset * 4 + 2] = b * 255
-  image[offset * 4 + 3] = 255
+  image[0] = r * 255
+  image[1] = g * 255
+  image[2] = b * 255
+  image[3] = 255
 
 end
-end
 
+defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
 
-defmodule Bmpgen do
-  def fileHeaderSize do #constant
-    14
-  end
+  x = threadIdx.x + blockIdx.x * blockDim.x
+  y = threadIdx.y + blockIdx.y * blockDim.y
+  offset = x + y * blockDim.x * gridDim.x
 
-  def infoHeaderSize do #constant
-    40
-  end
-
-  def bytes_per_pixel do
-    4
-  end
-  def recursiveWrite([]) do
-    IO.puts("done!")
-  end
-  def recursiveWrite([0.0, 0.0, 0.0, 0.0 | _rest]) do
-    IO.puts("rest of the list is empty. Finalizing write.")
-  end
-
-  #def recursiveWrite([a | image], i, max) do
-  def recursiveWrite([r, g, b, 255.0 | image]) do
-    l = [<<trunc(g)>>, <<trunc(b)>>, <<trunc(r)>>, <<255>>]
-    File.write!("img-gpuraytracer-#{Main.dim}x#{Main.dim}.bmp", l, [:append])
-    recursiveWrite(image)
-  end
-
-  def writeFileHeader(height, stride) do
-    fileSize = Bmpgen.fileHeaderSize + Bmpgen.infoHeaderSize + (stride * height)
-    fileHeader = ['B'] ++ ['M'] ++ [<<fileSize>>] ++ [<<fileSize >>> 8>>] ++ [<<fileSize >>> 16>>] ++ [<<fileSize >>> 24>>] ++ List.duplicate(<<0>>, 4) ++ [<<Bmpgen.fileHeaderSize + Bmpgen.infoHeaderSize>>] ++ List.duplicate(<<0>>, 3)
-    IO.puts("\n-----------------------\n")
-    File.write!("img-gpuraytracer-#{Main.dim}x#{Main.dim}.bmp", fileHeader)
-  end
-
-  def writeInfoHeader(height, width) do
-    infoHeader = [<<Bmpgen.infoHeaderSize>>] ++ List.duplicate(<<0>>, 3) ++ [<<width>>, <<width >>> 8>>, <<width >>> 16>>, <<width >>> 24>>, <<height>>, <<height >>> 8>>, <<height >>> 16>>, <<height >>> 24>>, <<1>>, <<0>>, <<Bmpgen.bytes_per_pixel * 8>>] ++ List.duplicate(<<0>>, 25)
-    File.write!("img-gpuraytracer-#{Main.dim}x#{Main.dim}.bmp", infoHeader, [:append])
+   id  = step * offset
+  #f(id,id)
+  if (offset < (size*size)) do
+    f(d_array+id,par1,par2,x,y)
   end
 end
+def mapxy_2D_para_no_resp(d_array,  step,par1, par2, size, f) do
 
+    PolyHok.spawn_jit(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{trunc(size/16),trunc(size/16),1},{16,16,1},[d_array,step,par1,par2,size,f])
+    d_array
+end
+
+end
 defmodule Main do
     def rnd(x) do
         :rand.uniform() *x
@@ -195,18 +168,20 @@ defmodule Main do
 
         prev = System.monotonic_time()
 
-        refSphere = PolyHok.new_gnx(sphereList)
-        refImag = PolyHok.new_gnx(1,width * height  * 4,{:s,32})
+        ref_sphere = PolyHok.new_gnx(sphereList)
+        ref_image = PolyHok.new_gnx(1,width * height  * 4,{:s,32})
 
-        PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
+        RayTracer.mapxy_2D_para_no_resp(ref_image, 4,width, ref_sphere, width, &RayTracer.raytracing/5)
 
-        image = PolyHok.get_gnx(refImag)
+       # PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
+
+        _image = PolyHok.get_gnx(ref_image)
 
         next = System.monotonic_time()
         IO.puts "PolyHok\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
 
 
-        BMP.gen_bmp_int('ray.bmp',width,image)
+        #BMP.gen_bmp_int('ray.bmp',width,image)
 
         #image = Matrex.to_list(image)
 
