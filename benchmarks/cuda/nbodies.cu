@@ -129,7 +129,7 @@ int main(const int argc, const char** argv) {
   ////////
 
 
-   map2<<<nBlocks, block_size>>>(d_buf, 6, 0.01, nBodies); // compute interbody forces
+   map2<<<nBlocks, block_size>>>(d_buf, 6, 0.01, nBodies,nBodies); // compute interbody forces
     nb_error = cudaGetLastError();
     if(nb_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(nb_error));
    
