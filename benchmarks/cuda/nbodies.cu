@@ -84,8 +84,8 @@ int main(const int argc, const char** argv) {
   
 
   int bytes = nBodies*sizeof(double)*6;
-  double *h_buf = (float*)malloc(bytes);
-  double *d_resp = (float*)malloc(bytes);
+  double *h_buf = (double*)malloc(bytes);
+  double *d_resp = (double*)malloc(bytes);
  
 
   randomizeBodies(h_buf, 6*nBodies); // Init pos / vel data
@@ -117,7 +117,7 @@ int main(const int argc, const char** argv) {
  
 
    ////////////////////
-    map1<<<nBlocks, block_size>>>(d_buf,6,d_buf, nBodies,nBodies)
+    map1<<<nBlocks, block_size>>>(d_buf,6,d_buf, nBodies,nBodies);
   
     nb_error = cudaGetLastError();
     if(nb_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(nb_error));
