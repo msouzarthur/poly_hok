@@ -80,7 +80,7 @@ int main(const int argc, const char** argv) {
   float softening = 0.000000001;
   cudaError_t nb_error;
   
-  const float dt = 0.01; // time step
+  //const float dt = 0.01; // time step
   
 
   int bytes = nBodies*sizeof(double)*6;
