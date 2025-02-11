@@ -3,108 +3,63 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-
-typedef struct { float x, y, z, vx, vy, vz; } Body;
-
-void randomizeBodies(float *data, int n) {
-  for (int i = 0; i < n; i++) {
-    data[i] = 2.0f * (rand() / (float)RAND_MAX) - 1.0f;
-  }
-}
-
-__global__
-void bodyForce(Body *p, float dt, int n,float softening) {
-  int i = blockDim.x * blockIdx.x + threadIdx.x;
-  if (i < n) {
-    float Fx = 0.0f; float Fy = 0.0f; float Fz = 0.0f;
-
-    for (int j = 0; j < n; j++) {
-      float dx = p[j].x - p[i].x;
-      float dy = p[j].y - p[i].y;
-      float dz = p[j].z - p[i].z;
-      float distSqr = dx*dx + dy*dy + dz*dz + softening;
-      float invDist = 1.0/sqrt(distSqr);
-      float invDist3 = invDist * invDist * invDist;
-
-      Fx += dx * invDist3; Fy += dy * invDist3; Fz += dz * invDist3;
-    }
-
-    p[i].vx += dt*Fx; p[i].vy += dt*Fy; p[i].vz += dt*Fz;
-  }
-}
-
-__global__
-void gpu_bodyForce(float *p, float dt, int n, float softening) {
-  int i = blockDim.x * blockIdx.x + threadIdx.x;
-  if (i < n) {
-
-    float Fx = 0.0f; float Fy = 0.0f; float Fz = 0.0f;
-
-    for (int j = 0; j < n; j++) {
-      float dx = p[6*j] - p[6*i];
-      float dy = p[6*j+1] - p[6*i+1];
-      float dz = p[6*j+2] - p[6*i+2];
-      float distSqr = dx*dx + dy*dy + dz*dz + softening;
-      float invDist = 1.0/sqrt(distSqr);
-      float invDist3 = invDist * invDist * invDist;
-
-      Fx += dx * invDist3; 
-      Fy += dy * invDist3; 
-      Fz += dz * invDist3;
-    }
-
-    p[6*i+3]+= dt*Fx; 
-    p[6*i+4] += dt*Fy; 
-    p[6*i+5] += dt*Fz;
-  }
-}
-
-__global__
-void gpu_integrate(float *p, float dt, int n) {
-  int i = blockDim.x * blockIdx.x + threadIdx.x;
-  if (i < n) {
-
-      p[6*i] += p[6*i+3]*dt;
-      p[6*i+1] += p[6*i+4]*dt;
-      p[6*i+2] += p[6*i+5]*dt;
- 
-  }
-}
-
-
-void cpu_bodyForce(float *p, float dt, int n,float softening) {
-  for(int i = 0; i<n; i++)
-  {
-
-    float Fx = 0.0f; float Fy = 0.0f; float Fz = 0.0f;
-
-    for (int j = 0; j < n; j++) {
-      float dx = p[6*j] - p[6*i];
-      float dy = p[6*j+1] - p[6*i+1];
-      float dz = p[6*j+2] - p[6*i+2];
-      float distSqr = dx*dx + dy*dy + dz*dz + softening;
-      float invDist = 1.0/(distSqr);
-      float invDist3 = invDist * invDist * invDist;
-
-      Fx += dx * invDist3; 
-      Fy += dy * invDist3; 
-      Fz += dz * invDist3;
-    }
-
-    p[6*i+3]+= dt*Fx; 
-    p[6*i+4] += dt*Fy; 
-    p[6*i+5] += dt*Fz;
-  }
-}
-
-bool Equality(float a, float b)
+__device__
+void gpu_nBodies(double *p, double *c, int n)
 {
-  double a1 = (double)a;
-  double b1 = (double)b;
-  if (fabs(a1-b1) < 0.001) return 1;
-  return 0;
+	float softening = 1.0e-9;
+	float dt = 0.01;
+	float fx = 0.0;
+	float fy = 0.0;
+	float fz = 0.0;
+for( int j = 0; j<n; j++){
+	double dx = (c[(6 * j)] - p[0]);
+	double dy = (c[((6 * j) + 1)] - p[1]);
+	double dz = (c[((6 * j) + 2)] - p[2]);
+	double distSqr = ((((dx * dx) + (dy * dy)) + (dz * dz)) + softening);
+	float invDist = (1.0 / sqrt(distSqr));
+	float invDist3 = ((invDist * invDist) * invDist);
+	fx = (fx + (dx * invDist3));
+	fy = (fy + (dy * invDist3));
+	fz = (fz + (dz * invDist3));
 }
+
+	p[3] = (p[3] + (dt * fx));
+	p[4] = (p[4] + (dt * fy));
+	p[5] = (p[5] + (dt * fz));
+}
+
+
+
+__device__
+void gpu_integrate(double *p, float dt, int n)
+{
+	p[0] = (p[0] + (p[3] * dt));
+	p[1] = (p[1] + (p[4] * dt));
+	p[2] = (p[2] + (p[5] * dt));
+}
+
+
+extern "C" __global__ void map_step_2_para_no_resp_kernel(double *d_array, int step, float par1, int par2, int size)
+{
+	int globalId = ((blockDim.x * ((gridDim.x * blockIdx.y) + blockIdx.x)) + threadIdx.x);
+	int id = (step * globalId);
+if((globalId < size))
+{
+gpu_integrate((d_array + id), par1, par2);
+}
+
+}
+
+
+
+void randomizeBodies(double *data, int n) {
+  for (int i = 0; i < n; i++) {
+    data[i] = (double) (rand() / (float)RAND_MAX);
+  }
+}
+
+
+
 int main(const int argc, const char** argv) {
   
   int user_value = atoi(argv[1]);
@@ -117,14 +72,14 @@ int main(const int argc, const char** argv) {
   const float dt = 0.01; // time step
   
 
-  int bytes = nBodies*sizeof(Body);
-  float *h_buf = (float*)malloc(bytes);
-  float *d_resp = (float*)malloc(bytes);
+  int bytes = nBodies*sizeof(double)*6;
+  double *h_buf = (float*)malloc(bytes);
+  double *d_resp = (float*)malloc(bytes);
  
 
   randomizeBodies(h_buf, 6*nBodies); // Init pos / vel data
 
-  float *d_buf;
+  double *d_buf;
 
   
   
