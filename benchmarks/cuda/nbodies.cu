@@ -77,7 +77,7 @@ int main(const int argc, const char** argv) {
 
   int nBodies = user_value;
   int block_size =  128;
-  float softening = 0.000000001;
+ // float softening = 0.000000001;
   cudaError_t nb_error;
   
   //const float dt = 0.01; // time step
