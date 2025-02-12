@@ -132,7 +132,7 @@ PolyHok.defmodule NN do
     type = PolyHok.get_type_gnx(d_array)
 
       distances_device = PolyHok.new_gnx(1,size, type)
-      PolyHok.spawn_jit(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
+      PolyHok.spawn(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
       distances_device
   end
   defd euclid(d_locations, lat, lng) do
