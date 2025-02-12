@@ -1,3 +1,4 @@
+@defaults %{coord: false, return: true, dim: :one}
 PolyHok.defmodule_jit Ske do
   @defaults %{coord: false, return: true, dim: :one}
   def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
