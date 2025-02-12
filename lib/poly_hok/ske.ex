@@ -6,6 +6,7 @@ defmodule Ske do
      if (not coord && not return && dim == :one)do
       map_2_para_no_resp(d_array,  par1, par2, func)
      end
+    end
      def map_2_para_no_resp(d_array,  par1, par2, f) do
       block_size =  128;
       {l,step} = PolyHok.get_shape_gnx(d_array)
