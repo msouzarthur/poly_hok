@@ -1,5 +1,6 @@
-@defaults %{coord: false, return: true, dim: :one}
-PolyHok.defmodule_jit Ske do
+
+PolyHok.defmodule Ske do
+  @defaults %{coord: false, return: true, dim: :one}
    def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
      if (not coord && not return && dim == :one)do
