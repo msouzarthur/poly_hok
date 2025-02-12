@@ -38,7 +38,7 @@ a=PolyHok.new_gnx(mat1)
 b=PolyHok.new_gnx(mat2)
 c=PolyHok.new_gnx(1,m*k, {:f,32})
 
-PolyHok.spawn(MM.mm/6,{grid_rows,grid_cols,1},{block_size,block_size,1},[a,b,c,m,n,k])
+PolyHok.spawn(&MM.mm/6,{grid_rows,grid_cols,1},{block_size,block_size,1},[a,b,c,m,n,k])
 
 _result = PolyHok.get_gnx(c)
 
