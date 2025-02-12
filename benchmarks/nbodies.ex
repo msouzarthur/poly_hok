@@ -2,7 +2,7 @@ require PolyHok
 
 PolyHok.defmodule NBodies do
 
-  defh gpu_nBodies(p,c,n) do
+  defd gpu_nBodies(p,c,n) do
     softening = 0.000000001
     dt = 0.01
     fx = 0.0
