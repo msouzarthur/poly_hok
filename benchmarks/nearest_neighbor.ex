@@ -30,7 +30,7 @@ defmodule DataSet do
     do
       lat = (7 + Enum.random(0..63)) + :rand.uniform()
       lon = (Enum.random(0..358)) + :rand.uniform()
-      new_matrix_from_function_d(
+      gen_bin_data(
         size - 1,
         <<accumulator::binary, lat::float-little-32, lon::float-little-32>>
       )
