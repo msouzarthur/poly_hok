@@ -11,6 +11,7 @@ defmodule Ske do
      def map_2_para_no_resp(d_array,  par1, par2, f) do
       block_size =  128;
       {l,step} = PolyHok.get_shape_gnx(d_array)
+      size = l*step
       nBlocks = floor ((size + block_size - 1) / block_size)
 
         PolyHok.spawn_jit(&NBodies.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,l,f])
