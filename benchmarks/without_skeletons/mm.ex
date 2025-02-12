@@ -25,14 +25,6 @@ k=m
 
 
 
-mat = Matrex.fill(1,m*k,1)
-
-f = fn _ -> Enum.random(1..100) end
-
-mat1 = Matrex.apply(mat,f)
-mat2 = Matrex.apply(mat,f)
-
-
 block_size = 16
 grid_rows = trunc ((m + block_size - 1) / block_size)
 grid_cols = trunc ((k + block_size - 1) / block_size)
