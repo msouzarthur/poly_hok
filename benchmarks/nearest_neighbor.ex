@@ -23,7 +23,7 @@ defmodule DataSet do
     lon = (Enum.random(0..358)) + :rand.uniform()
     acc = <<lat::float-little-32, lon::float-little-32>>
     ref = gen_bin_data(n-1, acc)
-    %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,n}, names:  [nil,nil]}
+    %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,2*n}, names:  [nil,nil]}
   end
   defp gen_bin_data(0, accumulator), do: accumulator
   defp gen_bin_data(size, accumulator)
@@ -154,21 +154,12 @@ end
 
 size = String.to_integer(arg)
 
-#data_set_host = DataSet.gen_data_set_nx(size)
+data_set_host = DataSet.gen_data_set_nx(size)
 
-data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
+#data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
 #IO.inspect data_set_host
 
-#tensor = Nx.tensor([Enum.reverse(Enum.to_list(1..500))++ [-1]++ Enum.reverse(Enum.to_list(1..500))], type: {:f,32})
-
-#tensor
-#|> PolyHok.new_gnx
-#|> NN.reduce(&NN.menor/2)
-#|> PolyHok.get_gnx
-#|> IO.inspect
-
-#raise "hell"
 
 prev = System.monotonic_time()
 data_set_device = PolyHok.new_gnx(data_set_host)
