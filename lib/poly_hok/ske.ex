@@ -5,7 +5,7 @@ defmodule Ske do
    def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
      if (not coord && not return && dim == :one)do
-      map_2_para_no_resp(d_array,  par1, par2, func)
+      map_2_para_no_resp({:nx, type, shape, name , ref},  par1, par2, func)
      end
     end
      def map_2_para_no_resp(d_array,  par1, par2, f) do
