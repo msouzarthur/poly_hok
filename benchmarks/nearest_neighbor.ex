@@ -18,6 +18,23 @@ defmodule DataSet do
     |> Enum.map(fn line -> words = String.split(line, " ", trim: true)
                            [ elem(Float.parse(Enum.at(words, 6)),0), elem(Float.parse(Enum.at(words,7)), 0) ] end  )
   end
+  def gen_data_set_nx(n) do
+    lat = (7 + Enum.random(0..63)) + :rand.uniform()
+    lon = (Enum.random(0..358)) + :rand.uniform()
+    acc = <<lat::float-little-32, lon::float-little-32>>
+    ref = gen_bin_data(n-1, acc)
+    %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,n}, names:  [nil,nil]}
+  end
+  defp gen_bin_data(0, accumulator), do: accumulator
+  defp gen_bin_data(size, accumulator)
+    do
+      lat = (7 + Enum.random(0..63)) + :rand.uniform()
+      lon = (Enum.random(0..358)) + :rand.uniform()
+      new_matrix_from_function_d(
+        size - 1,
+        <<accumulator::binary, lat::float-little-32, lon::float-little-32>>
+      )
+    end
   def gen_data_set(n), do: gen_data_set_(n,[])
   def gen_data_set_(0,data), do: data
   def gen_data_set_(n,data) do
@@ -36,7 +53,7 @@ defmodule DataSet do
 end
 
 
-PolyHok.defmodule_jit NN do
+PolyHok.defmodule NN do
   include CAS
   def euclid_seq(l,lat,lng), do: euclid_seq_(l,lat,lng,[])
   def euclid_seq_([m_lat,m_lng|array],lat,lng,data) do
@@ -118,12 +135,12 @@ PolyHok.defmodule_jit NN do
       PolyHok.spawn_jit(&NN.map_step_2para_1resp_kernel/7,{size,1,1},{1,1,1},[d_array,distances_device,step,par1,par2,size,f])
       distances_device
   end
-  defh euclid(d_locations, lat, lng) do
+  defd euclid(d_locations, lat, lng) do
     return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
       #return sqrt((lat-d_locations[0])*(lat-d_locations[0])+(lng-d_locations[1])*(lng-d_locations[1]))
     end
 
-  defh menor(x,y) do
+  defd menor(x,y) do
     if (x<y) do
       x
      else
@@ -138,7 +155,7 @@ end
 size = String.to_integer(arg)
 
 
-list_data_set = DataSet.gen_data_set(size)
+list_data_set = DataSet.gen_data_set_nx(size)
 
 data_set_host = Nx.tensor([list_data_set], type: {:f,32})
 

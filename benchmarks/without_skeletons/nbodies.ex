@@ -1,6 +1,6 @@
 require PolyHok
 
-PolyHok.defmodule_jit NBodies do
+PolyHok.defmodule NBodies do
 
   defk gpu_nBodies(p,dt,n,softening) do
     i = blockDim.x * blockIdx.x + threadIdx.x

@@ -1,6 +1,6 @@
 require PolyHok
 
-PolyHok.defmodule_jit NBodies do
+PolyHok.defmodule NBodies do
 
   defh gpu_nBodies(p,c,n) do
     softening = 0.000000001
@@ -24,8 +24,8 @@ PolyHok.defmodule_jit NBodies do
   p[4] = p[4]+ dt*fy;
   p[5] = p[5]+ dt*fz;
 
-  end
-  defh gpu_integrate(p, dt, n) do
+end
+defh gpu_integrate(p, dt, n) do
       p[0] = p[0] + p[3]*dt;
       p[1] = p[1] + p[4]*dt;
       p[2] = p[2] + p[5]*dt;

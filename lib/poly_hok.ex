@@ -50,7 +50,7 @@ defmodule PolyHok do
   end
 
 
-  defmacro defmodule(header,do: body) do
+  defmacro defmodule_st(header,do: body) do
     #IO.inspect header
     #IO.inspect body
     {:__aliases__, _, [module_name]} = header
@@ -82,7 +82,7 @@ defmodule PolyHok do
     #quote do: IO.puts "ok"
   end
 
-  defmacro defmodule_jit(header,do: body) do
+  defmacro defmodule(header,do: body) do
     #IO.inspect header
     #IO.inspect body
     {:__aliases__, _, [module_name]} = header
@@ -745,7 +745,7 @@ end
 ######## at compilation we build a representation for the kernel: {:ker, its type, its ast}
 ##### and leave a call to spawn
 
-def spawn_jit(k,t,b,l) do
+def spawn(k,t,b,l) do
   {kast,fun_graph}  = load_ast(k)
   kernel_name = JIT.get_kernel_name(k)
   delta = JIT.gen_types_delta(kast,l)
@@ -814,7 +814,7 @@ end
 #########
 #######################################
 
-def spawn({:func, k, type}, t,b,l) do
+def spawn_st({:func, k, type}, t,b,l) do
   IO.puts "Aqui!"
   f_name= case Macro.escape(k) do
     {:&, [],[{:/, [], [{{:., [], [_module, f_name]}, [no_parens: true], []}, _nargs]}]} -> f_name
@@ -835,7 +835,7 @@ def spawn({:func, k, type}, t,b,l) do
 
 end
 
-def spawn(k,t,b,l) when is_function(k) do
+def spawn_st(k,t,b,l) when is_function(k) do
    #IO.inspect k
    #raise "hell"
 
@@ -857,7 +857,7 @@ def spawn(k,t,b,l) when is_function(k) do
     spawn_nif(pk,t,b,args)
 
 end
-def spawn(_k,_t,_b,_l) do
+def spawn_st(_k,_t,_b,_l) do
   #IO.inspect _k
   raise "First argument of spawn must be a function.."
 end

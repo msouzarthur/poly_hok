@@ -21,10 +21,10 @@ end
   end
 end
 
-PolyHok.defmodule_jit RayTracer do
+PolyHok.defmodule RayTracer do
 
 
-defh raytracing(image, width,  spheres ,x,y) do
+defd raytracing(image, width,  spheres ,x,y) do
 
 
 

@@ -1,8 +1,8 @@
 PolyHok.defmodule_jit Ske do
-  @defaults %{coord: false, return: true}
+  @defaults %{coord: false, return: true, dim: :1D}
   def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
-    %{coord: coord, return: return} = Enum.into(options, @defaults)
-     if not coord && not return do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+     if not coord && not return && dim == :1D)do
       map_2_para_no_resp(d_array,  par1, par2, func)
      end
   end

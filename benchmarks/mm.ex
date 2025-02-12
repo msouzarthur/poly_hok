@@ -1,7 +1,7 @@
 
 require PolyHok
 
-PolyHok.defmodule_jit MM do
+PolyHok.defmodule MM do
 
 defk map2xy2D_kernel(arr1,arr2,par, resp,size,f) do
   row  = blockIdx.y * blockDim.y + threadIdx.y

@@ -42,7 +42,7 @@ def compile_function({name,type}) do
     #      IO.inspect "Call graph: #{inspect fun_graph}"
           inf_types = JIT.infer_types(fast,delta)
         #  IO.inspect "inf_types: #{inspect inf_types}"
-          {:defh,_iinfo,[header,[body]]} = fast
+          {:defd,_iinfo,[header,[body]]} = fast
           {fname, _, para} = header
 
           param_list = para
@@ -101,7 +101,7 @@ def compile_kernel({:defk,_,[header,[body]]},inf_types,subs) do
    "\n" <> k <> "\n\n" # <> accessfunc
 end
 
-def gen_delta_from_type( {:defh,_,[header,[_body]]}, {return_type, types} ) do
+def gen_delta_from_type( {:defd,_,[header,[_body]]}, {return_type, types} ) do
    {_, _, formal_para} = header
    delta=formal_para
           |> Enum.map(fn({p, _, _}) -> p end)
@@ -175,7 +175,7 @@ end
 def infer_types({:defk,_,[_header,[body]]},delta) do
   PolyHok.TypeInference.type_check(delta,body)
 end
-def infer_types({:defh,_,[_header,[body]]},delta) do
+def infer_types({:defd,_,[_header,[body]]},delta) do
   PolyHok.TypeInference.type_check(delta,body)
 end
 def infer_types({:fn, _, [{:->, _ , [_para,body]}] },delta) do
@@ -307,7 +307,7 @@ defp process_definitions(module_name,[h|t]) do
                                       register_function(module_name,fname,h,funs)
                                       process_definitions(module_name,t)
 
-        {:defh , ii, [header,[body]]} -> {fname, _, _para} = header
+        {:defd , ii, [header,[body]]} -> {fname, _, _para} = header
 
                                       #  IO.inspect "Process definitions: #{fname}"
 
@@ -315,10 +315,10 @@ defp process_definitions(module_name,[h|t]) do
                                         body = PolyHok.TypeInference.add_return(Map.put(%{}, :return, :none), body)
                                         #body = PolyHok.CudaBackend.add_return( body)
                                    #  IO.inspect body
-                                        funs = find_functions({:defh , ii, [header,[body]]})
+                                        funs = find_functions({:defd , ii, [header,[body]]})
                                        # IO.inspect "Function graph: #{inspect funs}"
                                        # IO.inspect "body: #{inspect body}"
-                                        register_function(module_name,fname,{:defh , ii, [header,[body]]},funs)
+                                        register_function(module_name,fname,{:defd , ii, [header,[body]]},funs)
                                         process_definitions(module_name,t)
         {:include, _, [{_,_,[name]}]} ->
                 code = File.read!("c_src/Elixir.#{name}.cu")
@@ -352,7 +352,7 @@ def find_functions({:defk, _i1,[header, [body]]}) do
 end
 
 
-def find_functions({:defh, _i1,[header, [body]]}) do
+def find_functions({:defd, _i1,[header, [body]]}) do
  # IO.inspect "aqui inicio"
   {_fname, _, para} = header
 

@@ -27,7 +27,7 @@ defmodule PolyHok.CudaBackend do
 
     gen_new_definitions(t)
 end
-  defp gen_new_definitions([{:defh , _, [header, _code] }| t]) do
+  defp gen_new_definitions([{:defd , _, [header, _code] }| t]) do
   {fname, comp_info, para} = header
 
     para = para
@@ -107,7 +107,7 @@ end
         end
         [definition | rest ] = t
         case definition do
-           {:defh , _, _ } ->   code = compile_function(module_name,definition,h,module_name)
+           {:defd , _, _ } ->   code = compile_function(module_name,definition,h,module_name)
                                 rest_code = compile_definitions(module_name,rest)
                                 code <> rest_code
            {:defk, _, _ } ->   code = compile_kernel(module_name,definition,h,module_name)
@@ -120,7 +120,7 @@ end
           {:defk, _, _ } ->   code = compile_kernel(module_name,h, :none,module_name)
                             rest_code = compile_definitions(module_name,t)
                             code <> rest_code
-          {:defh , _, _ } -> code = compile_function(module_name,h, :none,module_name)
+          {:defd , _, _ } -> code = compile_function(module_name,h, :none,module_name)
                             rest_code = compile_definitions(module_name,t)
                             code <> rest_code
           {:include, _, [{_,_,[name]}]} -> #IO.inspect(name)
@@ -292,7 +292,7 @@ end
 
   #################### Compile a function
 
-  def compile_function(_module_name,{:defh,iinfo,[header,[body]]}, type_def,module) do
+  def compile_function(_module_name,{:defd,iinfo,[header,[body]]}, type_def,module) do
     {fname, _, para} = header
    # IO.inspect body
     #raise "hell"
@@ -317,7 +317,7 @@ end
 
     fun_type = if is_typed do fun_type else Map.get(inf_types,:return) end
 
-    save_ast_info(fname,{:defh,iinfo,[header,[body]]},is_typed, inf_types)
+    save_ast_info(fname,{:defd,iinfo,[header,[body]]},is_typed, inf_types)
 
     param_list = para
       |> Enum.map(fn {p, _, _}-> gen_para(p,Map.get(inf_types,p)) end)

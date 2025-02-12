@@ -24,7 +24,7 @@ end
   end
 end
 
-PolyHok.defmodule_jit RayTracer do
+PolyHok.defmodule RayTracer do
 
 
 defk raytracing(width, height, spheres, image) do

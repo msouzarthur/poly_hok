@@ -1,7 +1,7 @@
 require PolyHok
 #Nx.default_backend(EXLA.Backend)
 #import Nx
-PolyHok.defmodule_jit DP do
+PolyHok.defmodule DP do
 include CAS
   defk map_2kernel(a1,a2,a3,size,f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
