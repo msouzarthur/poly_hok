@@ -23,7 +23,7 @@ defmodule DataSet do
     lon = (Enum.random(0..358)) + :rand.uniform()
     acc = <<lat::float-little-32, lon::float-little-32>>
     ref = gen_bin_data(n-1, acc)
-    %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,2*n}, names:  [nil,nil]}
+    %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {n,2}, names:  [nil,nil]}
   end
   defp gen_bin_data(0, accumulator), do: accumulator
   defp gen_bin_data(size, accumulator)
