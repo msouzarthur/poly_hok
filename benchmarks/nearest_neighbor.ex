@@ -154,10 +154,8 @@ end
 
 size = String.to_integer(arg)
 
+data_set_host = DataSet.gen_data_set_nx(size)
 
-list_data_set = DataSet.gen_data_set_nx(size)
-
-data_set_host = Nx.tensor([list_data_set], type: {:f,32})
 
 #IO.inspect data_set_host
 
