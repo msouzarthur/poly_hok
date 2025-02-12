@@ -1,3 +1,4 @@
+require PolyHok
 
 defmodule Ske do
   @defaults %{coord: false, return: true, dim: :one}
