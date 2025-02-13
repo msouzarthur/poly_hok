@@ -572,7 +572,7 @@ static ERL_NIF_TERM create_gpu_array_nx_nif(ErlNifEnv *env, int argc, const ERL_
     array = (float *) array_el.data;
 
    int data_size = sizeof(float)* ncol*nrow;
-
+   printf("size float: %d data size: %d\n", sizeof(float),data_size);
     ///// MAKE CUDA CALL
     err = cuMemAlloc(&dev_array, data_size) ;
   
