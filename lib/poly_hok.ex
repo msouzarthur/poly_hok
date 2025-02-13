@@ -748,7 +748,7 @@ end
 def spawn(k,t,b,l) do
   kernel_name = JIT.get_kernel_name(k)
   {kast,fun_graph} = case load_ast(k) do
-            {a,g} -> {a,b}
+            {a,g} -> {a,g}
             nil -> raise "Unknown kernel #{inspect kernel_name}"
   end
   delta = JIT.gen_types_delta(kast,l)
