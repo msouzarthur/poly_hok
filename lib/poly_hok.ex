@@ -232,7 +232,13 @@ defmodule PolyHok do
 def get_type_gnx({:nx, type, _shape, _name , _ref}) do
   type
 end
+def get_type({:nx, type, _shape, _name , _ref}) do
+  type
+end
 def get_shape_gnx({:nx, _type, shape, _name , _ref}) do
+  shape
+end
+def get_shape({:nx, _type, shape, _name , _ref}) do
   shape
 end
 def new_gnx(%Nx.Tensor{data: data, type: type, shape: shape, names: name}) do
@@ -268,6 +274,17 @@ def new_gnx(l,c,type) do
 
  {:nx, type, {l,c}, [nil,nil] , ref}
 end
+def new_gnx({l,c},type) do
+  # IO.puts "aque"
+   ref = case type do
+     {:f,32} -> new_gpu_array_nif(l,c,Kernel.to_charlist("float"))
+     {:f,64} -> new_gpu_array_nif(l,c,Kernel.to_charlist("double"))
+     {:s,32} -> new_gpu_array_nif(l,c,Kernel.to_charlist("int"))
+     x -> raise "new_gnx: type #{x} not suported"
+  end
+
+  {:nx, type, {l,c}, [nil,nil] , ref}
+ end
 def get_gnx({:matrex, ref, {rows,columns}}) do
   bin = get_gpu_array_nif(ref,rows,columns,Kernel.to_charlist("float"))
   array = <<rows::unsigned-integer-little-32, columns::unsigned-integer-little-32,bin::binary>>
