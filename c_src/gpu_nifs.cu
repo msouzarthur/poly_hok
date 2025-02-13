@@ -580,7 +580,8 @@ static ERL_NIF_TERM create_gpu_array_nx_nif(ErlNifEnv *env, int argc, const ERL_
       { char message[200];
         const char *error;
         cuGetErrorString(err, &error);
-        strcpy(message,"Error create_gpu_array_nx_nif: ");
+        printf("nrow %d ncol %d size %d size bytes %d\n", nrow, ncol,nrow*ncol, data_size);
+        strcpy(message,"Error (create_gpu_array_nx_nif:) cuMemAlloc size: %d");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
     }
