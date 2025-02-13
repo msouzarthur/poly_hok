@@ -1,4 +1,5 @@
 require PolyHok
+require PolyHok.Ske
 
 PolyHok.defmodule NBodies do
 
