@@ -160,6 +160,7 @@ data_set_host = DataSet.gen_data_set_nx(size)
 
 #IO.inspect data_set_host
 
+IO.inspect data_set_host
 
 prev = System.monotonic_time()
 data_set_device = PolyHok.new_gnx(data_set_host)
