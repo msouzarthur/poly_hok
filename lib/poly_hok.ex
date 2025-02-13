@@ -746,8 +746,11 @@ end
 ##### and leave a call to spawn
 
 def spawn(k,t,b,l) do
-  {kast,fun_graph}  = load_ast(k)
   kernel_name = JIT.get_kernel_name(k)
+  {kast,fun_graph} = case load_ast(k) do
+            {a,g} -> {a,b}
+            nil -> raise "Unknown kernel #{inspect kernel_name}"
+  end
   delta = JIT.gen_types_delta(kast,l)
   #IO.inspect "Delta: #{inspect delta}"
   inf_types = JIT.infer_types(kast,delta)
