@@ -580,7 +580,7 @@ static ERL_NIF_TERM create_gpu_array_nx_nif(ErlNifEnv *env, int argc, const ERL_
     array = (float *) array_el.data;
 
    size_t data_size = sizeof(float)* ncol*nrow;
-   printf("size float: %d data size: %d\n", sizeof(float),data_size);
+  // printf("size float: %d data size: %d\n", sizeof(float),data_size);
     ///// MAKE CUDA CALL
     err = cuMemAlloc(&dev_array, data_size) ;
   
@@ -588,7 +588,7 @@ static ERL_NIF_TERM create_gpu_array_nx_nif(ErlNifEnv *env, int argc, const ERL_
       { char message[200];
         const char *error;
         cuGetErrorString(err, &error);
-        printf("nrow %d ncol %d size %d size bytes %d\n", nrow, ncol,nrow*ncol, data_size);
+       // printf("nrow %d ncol %d size %d size bytes %d\n", nrow, ncol,nrow*ncol, data_size);
         strcpy(message,"Error (create_gpu_array_nx_nif:) cuMemAlloc size: %d");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
