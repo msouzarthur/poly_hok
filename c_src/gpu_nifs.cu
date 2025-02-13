@@ -606,7 +606,7 @@ static ERL_NIF_TERM create_gpu_array_nx_nif(ErlNifEnv *env, int argc, const ERL_
     int         *array;
     array = (int *) array_el.data;
     
-    int data_size = sizeof(int)* ncol*nrow;
+    size_t data_size = sizeof(int)* ncol*nrow;
 
      ///// MAKE CUDA CALL
     err = cuMemAlloc(&dev_array, data_size) ;
@@ -641,7 +641,7 @@ static ERL_NIF_TERM create_gpu_array_nx_nif(ErlNifEnv *env, int argc, const ERL_
  
     array = (double *) array_el.data;
 
-    int data_size = sizeof(double)* ncol*nrow;
+    size_t data_size = sizeof(double)* ncol*nrow;
     
     err = cuMemAlloc(&dev_array, data_size) ;
     if(err != CUDA_SUCCESS)  
@@ -699,7 +699,7 @@ static ERL_NIF_TERM create_gpu_array_nx_nif(ErlNifEnv *env, int argc, const ERL_
 
 
 static ERL_NIF_TERM new_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-  int data_size;
+  size_t data_size;
   int nrow,ncol;
   ERL_NIF_TERM term;
   
