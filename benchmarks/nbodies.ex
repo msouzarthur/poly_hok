@@ -25,7 +25,7 @@ PolyHok.defmodule NBodies do
   p[5] = p[5]+ dt*fz;
 
 end
-defh gpu_integrate(p, dt, n) do
+defd gpu_integrate(p, dt, n) do
       p[0] = p[0] + p[3]*dt;
       p[1] = p[1] + p[4]*dt;
       p[2] = p[2] + p[5]*dt;
