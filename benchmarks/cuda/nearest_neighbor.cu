@@ -175,8 +175,9 @@ int main(int argc, char* argv[])
 
     float *resp, *d_resp;
     resp = (float *)malloc(sizeof(float));
+    resp[0] = 50000;
 	cudaMalloc((void **) &d_resp,sizeof(float));
-
+    cudaMemcpy( d_resp, resp, sizeof(float) , cudaMemcpyHostToDevice);
 
     reduce_kernel<<< blocksPerGrid, threadsPerBlock >>>(d_distances,d_resp,numRecords);
     cudaDeviceSynchronize();
