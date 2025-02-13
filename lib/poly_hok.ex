@@ -83,7 +83,7 @@ defmodule PolyHok do
   end
 
   defmacro defmodule(header,do: body) do
-    #IO.inspect header
+    IO.inspect header
     #IO.inspect body
     {:__aliases__, _, [module_name]} = header
 
