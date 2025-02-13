@@ -1,6 +1,6 @@
 require PolyHok
 
-PolyHok.defmodule PolyHok.Ske do
+defmodule PolyHok.Ske do
   @defaults %{coord: false, return: true, dim: :one}
    def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
@@ -17,7 +17,9 @@ PolyHok.defmodule PolyHok.Ske do
         PolyHok.spawn(&SkeKernels.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,l,f])
         d_array
     end
-  defk map_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
+  end
+PolyHok.defmodule SkeKernels do
+ defk map_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
     globalId  = blockDim.x * ( gridDim.x * blockIdx.y + blockIdx.x ) + threadIdx.x
     id  = step * globalId
     #f(id,id)
