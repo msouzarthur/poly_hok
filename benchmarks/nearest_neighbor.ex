@@ -160,19 +160,15 @@ data_set_host = DataSet.gen_data_set_nx(size)
 
 #IO.inspect data_set_host
 
-IO.inspect data_set_host
+#IO.inspect data_set_host
 
 prev = System.monotonic_time()
-data_set_device = PolyHok.new_gnx(data_set_host)
 
-
-r1 = NN.map_step_2para_1resp(data_set_device,2,0.0,0.0,size, &NN.euclid/3)
-IO.inspect r1
-
-r1
-      |> NN.reduce(50000.0,&NN.menor/2)
-      |> PolyHok.get_gnx
-      |> IO.inspect
+_r= PolyHok.new_gnx(data_set_host)
+|> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
+|> NN.reduce(50000.0,&NN.menor/2)
+|> PolyHok.get_gnx
+#      |> IO.inspect
 
 
 
