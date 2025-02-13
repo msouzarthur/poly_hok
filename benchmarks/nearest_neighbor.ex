@@ -165,8 +165,8 @@ IO.inspect data_set_host
 prev = System.monotonic_time()
 data_set_device = PolyHok.new_gnx(data_set_host)
 
-data_set_device
-r1 = NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
+
+r1 = NN.map_step_2para_1resp(data_set_device,2,0.0,0.0,size, &NN.euclid/3)
 IO.inspect r1
 
 r1
