@@ -166,7 +166,10 @@ prev = System.monotonic_time()
 data_set_device = PolyHok.new_gnx(data_set_host)
 
 data_set_device
-      |> NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
+r1 = NN.map_step_2para_1resp(2,0.0,0.0,size, &NN.euclid/3)
+IO.inspect r1
+
+r1
       |> NN.reduce(50000.0,&NN.menor/2)
       |> PolyHok.get_gnx
       |> IO.inspect
