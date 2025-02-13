@@ -386,7 +386,7 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
       { char message[200];//printf("its ok\n");
         const char *error;
         cuGetErrorString(err, &error);
-        strcpy(message,"Error get_gpu_array_nif: ");
+        strcpy(message,"Error at kernel launch: ");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
     }
