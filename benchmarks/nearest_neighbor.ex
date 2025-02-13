@@ -121,7 +121,7 @@ PolyHok.defmodule NN do
 
 
     #var globalId int = blockDim.x * ( gridDim.x * blockIdx.y + blockIdx.x ) + threadIdx.x
-    golbalId = threadIdx.x + blockIdx.x * blockDim.x
+    globalId = threadIdx.x + blockIdx.x * blockDim.x
     id  = step * globalId
     #f(id,id)
     if (globalId < size) do
