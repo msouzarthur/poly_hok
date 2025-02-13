@@ -12,7 +12,6 @@
 
 #include <time.h>
 
-
 __device__ static float atomic_cas(float* address, float oldv, float newv)
 {
     int* address_as_i = (int*) address;
@@ -21,81 +20,30 @@ __device__ static float atomic_cas(float* address, float oldv, float newv)
 
 
 
-__global__
-void reduce_kernel(float *a, float *ref4, float (*f)(float,float), int n)
-{
-__shared__ float cache[256];
-        int tid = (threadIdx.x + (blockIdx.x * blockDim.x));
-        int cacheIndex = threadIdx.x;
-        float temp = 0.0;
-if((tid < n))
-{
-        temp = a[tid];
-        tid = ((blockDim.x * gridDim.x) + tid);
-}
-
-while((tid < n)){
-        temp = f(a[tid], temp);
-        tid = ((blockDim.x * gridDim.x) + tid);
-}
-        cache[cacheIndex] = temp;
-__syncthreads();
-        int i = (blockDim.x / 2);
-        int up = ((blockDim.x * gridDim.x) * 256);
-while(((i != 0) && ((cacheIndex + up) < n))){
-if((cacheIndex < i))
-{
-        cache[cacheIndex] = f(cache[(cacheIndex + i)], cache[cacheIndex]);
-}
-
-__syncthreads();
-
-        i = (i / 2);
-}
-if((cacheIndex == 0))
-{
-        float current_value = ref4[0];
-while((! (current_value == atomic_cas(ref4, current_value, f(cache[0], current_value))))){
-        current_value = ref4[0];
-}
-}
-
-}
-__global__
-void map_step_2para_1resp_kernel(float *d_array, float *d_result, int step, float par1, float par2, int size, float (*f)(float*,float,float))
-{
-int globalId = ((blockDim.x * ((gridDim.x * blockIdx.y) + blockIdx.x)) + threadIdx.x);
-int id = (step * globalId);
-if((globalId < size))
-{
-        d_result[globalId] = f((d_array + id), par1, par2);
-}
-
-}
-
 __device__
 float euclid(float *d_locations, float lat, float lng)
 {
 return (sqrt((((lat - d_locations[0]) * (lat - d_locations[0])) + ((lng - d_locations[1]) * (lng - d_locations[1])))));
 }
 
-__device__ void* euclid_ptr = (void*) euclid;
 
-extern "C" void* get_euclid_ptr()
+extern "C" __global__ void map_step_2para_1resp_kernel(float *d_array, float *d_result, int step, float par1, float par2, int size)
 {
-        void* host_function_ptr;
-        cudaMemcpyFromSymbol(&host_function_ptr, euclid_ptr, sizeof(void*));
-        return host_function_ptr;
+	int globalId = (threadIdx.x + (blockIdx.x * blockDim.x));
+	int id = (step * globalId);
+if((globalId < size))
+{
+	d_result[globalId] = euclid((d_array + id), par1, par2);
 }
+
+}
+
+
+
 
 __device__
 float menor(float x, float y)
 {
-if((y == 0.0))
-{
-return (x);
-}
-else{
 if((x < y))
 {
 return (x);
@@ -106,32 +54,40 @@ return (y);
 
 }
 
+
+extern "C" __global__ void reduce_kernel(float *a, float *ref4, int n)
+{
+__shared__ float cache[256];
+	int tid = (threadIdx.x + (blockIdx.x * blockDim.x));
+	int cacheIndex = threadIdx.x;
+	float temp = ref4[0];
+while((tid < n)){
+	temp = menor(a[tid], temp);
+	tid = ((blockDim.x * gridDim.x) + tid);
+}
+	cache[cacheIndex] = temp;
+__syncthreads();
+	int i = (blockDim.x / 2);
+while((i != 0)){
+if((cacheIndex < i))
+{
+	cache[cacheIndex] = menor(cache[(cacheIndex + i)], cache[cacheIndex]);
 }
 
-__device__ void* menor_ptr = (void*) menor;
-
-extern "C" void* get_menor_ptr()
+__syncthreads();
+	i = (i / 2);
+}
+if((cacheIndex == 0))
 {
-        void* host_function_ptr;
-        cudaMemcpyFromSymbol(&host_function_ptr, menor_ptr, sizeof(void*));
-        return host_function_ptr;
+	float current_value = ref4[0];
+while((! (current_value == atomic_cas(ref4, current_value, menor(cache[0], current_value))))){
+	current_value = ref4[0];
+}
+}
+
 }
 
 
-
-/*
-typedef struct latLong
-{
-  float lat;
-  float lng;
-} LatLong;
-
-typedef struct record
-{
-  char recString[REC_LENGTH];
-  float distance;
-} Record;
-*/
 void loadData(float *locations, int size);
 //void findLowest(std::vector<Record> &records,float *distances,int numRecords,int topN);
 //void printUsage();
@@ -209,11 +165,7 @@ int main(int argc, char* argv[])
 
    
 
-
-    float (*f1)(float*,float,float) = (float (*)(float*,float,float)) get_euclid_ptr();
-    float (*f2)(float,float) = (float (*)(float,float)) get_menor_ptr();
-
-    map_step_2para_1resp_kernel<<< numRecords, 1 >>>(d_locations,d_distances,2,0.0,0.0, numRecords, f1);
+    map_step_2para_1resp_kernel<<< numRecords, 1 >>>(d_locations,d_distances,2,0.0,0.0, numRecords);
     
 
     cudaDeviceSynchronize();
@@ -226,7 +178,7 @@ int main(int argc, char* argv[])
 	cudaMalloc((void **) &d_resp,sizeof(float));
 
 
-    reduce_kernel<<< blocksPerGrid, threadsPerBlock >>>(d_distances,d_resp,f2,numRecords);
+    reduce_kernel<<< blocksPerGrid, threadsPerBlock >>>(d_distances,d_resp,numRecords);
     cudaDeviceSynchronize();
     //Copy data from device memory to host memory
 
