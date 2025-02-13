@@ -461,7 +461,7 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
       { char message[200]; 
         const char *error;
         cuGetErrorString(err, &error);
-        strcpy(message,"Error get_gpu_array_nif: ");
+        strcpy(message,"Error (get_gpu_array_nif): error compying data from device to host: ");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
     }
@@ -486,7 +486,7 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
       { char message[200]; //printf("cuda get\n");
         const char *error;
         cuGetErrorString(err, &error);
-        strcpy(message,"Error get_gpu_array_nif: ");
+        strcpy(message,"Error (get_gpu_array_nif) copying data from device to host: ");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
     }
@@ -510,7 +510,7 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
       { char message[200];
         const char *error;
         cuGetErrorString(err, &error);
-        strcpy(message,"Error get_gpu_array_nif: ");
+        strcpy(message,"Error (get_gpu_array_nif) copying data from device to host: ");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
     }
@@ -520,7 +520,7 @@ static ERL_NIF_TERM get_gpu_array_nif(ErlNifEnv *env, int argc, const ERL_NIF_TE
   } else /* default: */
  {
     char message[200];
-        strcpy(message,"Error get_nx_nif: unknown type: ");
+        strcpy(message,"Error (get_gpu_array_nif) copying data from device to host: ");
         strcat(message, type_name);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
  }
