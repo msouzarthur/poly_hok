@@ -17,7 +17,7 @@ void init_cuda(ErlNifEnv *env)
     {
        CUresult err;
        int device = 0;
-       printf("aqui!");
+       printf("aqui!\n");
        cuInit(0);
        err = cuCtxCreate(&context, 0, device);
        if(err != CUDA_SUCCESS)  
@@ -30,7 +30,7 @@ void init_cuda(ErlNifEnv *env)
       }
     
       
-    } else {cuCtxSetCurrent(context);}
+    } else {printf("set\n"); cuCtxSetCurrent(context);}
 }
 
 #define MX_ROWS(matrix) (((uint32_t*)matrix)[0])
