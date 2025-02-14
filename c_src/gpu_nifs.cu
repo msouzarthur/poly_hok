@@ -377,6 +377,8 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
 
   // LAUNCH KERNEL
 
+  init_cuda(env);
+
   err = cuLaunchKernel(function, b1, b2, b3,  // Nx1x1 blocks
                                     t1, t2, t3,            // 1x1x1 threads
                                     0, 0, args, 0) ;
