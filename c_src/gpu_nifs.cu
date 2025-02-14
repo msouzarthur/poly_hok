@@ -390,14 +390,14 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
    //err=  cuMemcpyDtoH(ptr_matrix, dev_array, 3*sizeof(int)) ;
    // printf("pointer %p\n",*dev_array);
   //  printf("blah %p\n",args[0]);
-    if(err != CUDA_SUCCESS)  
+  /*  if(err != CUDA_SUCCESS)  
       { char message[200];//printf("its ok\n");
         const char *error;
         cuGetErrorString(err, &error);
         strcpy(message,"Error at kernel launch: ");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
-    }
+    }*/
 
    return enif_make_int(env, 0);
 }  
