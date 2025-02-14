@@ -17,7 +17,7 @@ void init_cuda(ErlNifEnv *env)
     {
        CUresult err;
        int device = 0;
-       printf("aqui!")
+       printf("aqui!");
        cuInit(0);
        err = cuCtxCreate(&context, 0, device);
        if(err != CUDA_SUCCESS)  
