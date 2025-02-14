@@ -383,7 +383,7 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
   
   if (err != CUDA_SUCCESS) fail_cuda(env,err,"cuLaunchKernel jit compile");
    
-   cuCtxSynchronize();
+   //cuCtxSynchronize();
 
   // int ptr_matrix[1000];
    //CUdeviceptr *dev_array = (CUdeviceptr*) args[1];
