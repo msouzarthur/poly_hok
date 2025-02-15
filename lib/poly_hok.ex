@@ -41,7 +41,8 @@ defmodule PolyHok do
     IO.inspect arr1
     IO.inspect arr2
     IO.inspect par3
-
+    IO.inspect e1
+    IO.inspect e2
   IO.puts "function"
   IO.inspect var1
   IO.inspect var2
