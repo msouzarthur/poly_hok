@@ -17,7 +17,7 @@ void init_cuda(ErlNifEnv *env)
     {
        CUresult err;
        int device = 0;
-       printf("aqui!\n");
+      // printf("aqui!\n");
        cuInit(0);
        err = cuCtxCreate(&context, 0, device);
        if(err != CUDA_SUCCESS)  
@@ -30,7 +30,7 @@ void init_cuda(ErlNifEnv *env)
       }
     
       
-    } else {printf("set\n"); cuCtxSetCurrent(context);}
+    } else {cuCtxSetCurrent(context);}
 }
 
 #define MX_ROWS(matrix) (((uint32_t*)matrix)[0])
@@ -377,29 +377,28 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
 
   // LAUNCH KERNEL
 
-  init_cuda(env);
-
+ 
   err = cuLaunchKernel(function, b1, b2, b3,  // Nx1x1 blocks
                                     t1, t2, t3,            // 1x1x1 threads
                                     0, 0, args, 0) ;
   
   if (err != CUDA_SUCCESS) fail_cuda(env,err,"cuLaunchKernel jit compile");
    
-   //cuCtxSynchronize();
+  cuCtxSynchronize();
 
   // int ptr_matrix[1000];
    //CUdeviceptr *dev_array = (CUdeviceptr*) args[1];
    //err=  cuMemcpyDtoH(ptr_matrix, dev_array, 3*sizeof(int)) ;
    // printf("pointer %p\n",*dev_array);
   //  printf("blah %p\n",args[0]);
-  /*  if(err != CUDA_SUCCESS)  
+    if(err != CUDA_SUCCESS)  
       { char message[200];//printf("its ok\n");
         const char *error;
         cuGetErrorString(err, &error);
         strcpy(message,"Error at kernel launch: ");
         strcat(message, error);
         enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
-    }*/
+    }
 
    return enif_make_int(env, 0);
 }  
