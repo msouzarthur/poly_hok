@@ -2,47 +2,6 @@
 #include <time.h>
 
 
-__global__
-void map2xy2D_kernel(float *arr1, float *arr2, int par, float *resp, int size, float (*f)(float*,float*,int,int,int))
-{
-        int row = ((blockIdx.y * blockDim.y) + threadIdx.y);
-        int col = ((blockIdx.x * blockDim.x) + threadIdx.x);
-
-
-
-if(((col < size) && (row < size)))
-{
-        resp[((row * size) + col)] = f(arr1, arr2, par, row, col);
-}
-
-}
-
-
-
-__device__
-float anonymous_9nl89mhko6(float *mat1, float *mat2, int m, int x, int y)
-{
-        float sum = 0.0;
-for( int i = 0; i<m; i+=1){
-        sum = (sum + (mat1[((x * m) + i)] * mat2[((i * m) + y)]));
-}
-
-return (sum);
-}
-
-__device__ void* anonymous_9nl89mhko6_ptr = (void*) anonymous_9nl89mhko6;
-
-void* get_anonymous_9nl89mhko6_ptr()
-{
-        void* host_function_ptr;
-        cudaMemcpyFromSymbol(&host_function_ptr, anonymous_9nl89mhko6_ptr, sizeof(void*));
-        return host_function_ptr;
-}
-
-
-
-
-
 
 
 void cpu_mm(float *h_a, float *h_b, float *h_result, int m, int n, int k) {
@@ -72,6 +31,31 @@ void checkElementsAre(float *gpu, float *cpu, int N)
   }
   printf("SUCCESS! All values computed correctly.\n");
 }
+
+__device__
+float anon_ajh07a72e0(float *mat1, float *mat2, int m, int x, int y)
+{
+	int sum = 0;
+for( int i = 0; i<m; i+=1){
+	sum = (sum + (mat1[((x * m) + i)] * mat2[((i * m) + y)]));
+}
+
+return (sum);
+}
+
+
+extern "C" __global__ void map2xy2D_kernel(float *arr1, float *arr2, int par, float *resp, int size)
+{
+	int row = ((blockIdx.y * blockDim.y) + threadIdx.y);
+	int col = ((blockIdx.x * blockDim.x) + threadIdx.x);
+if(((col < size) && (row < size)))
+{
+	resp[((row * size) + col)] = anon_ajh07a72e0(arr1, arr2, par, row, col);
+}
+
+}
+
+
 
 int main(int argc, char const *argv[])
 {   
@@ -154,10 +138,10 @@ for (int i = 1; i <= m*m; ++i) {
      j_error = cudaGetLastError();
     if(j_error != cudaSuccess) printf("Error 5: %s\n", cudaGetErrorString(j_error));
     
-    float (*f)(float*,float*,int,int,int) =  (float (*)(float*,float*,int,int,int)) get_anonymous_9nl89mhko6_ptr();
+    //float (*f)(float*,float*,int,int,int) =  (float (*)(float*,float*,int,int,int)) get_anonymous_9nl89mhko6_ptr();
     
 
-    map2xy2D_kernel<<<dimGrid, dimBlock>>>(d_a, d_b, m, d_c, m,f);  
+    map2xy2D_kernel<<<dimGrid, dimBlock>>>(d_a, d_b, m, d_c, m);  
    
     j_error = cudaGetLastError();
     if(j_error != cudaSuccess) printf("Error 6: %s\n", cudaGetErrorString(j_error));
