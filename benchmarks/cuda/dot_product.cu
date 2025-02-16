@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
      j_error = cudaGetLastError();
     if(j_error != cudaSuccess) {printf("Error: %s\n", cudaGetErrorString(j_error)); exit(1);}
 
-    reduce_kernel<<< numberOfBlocks, threadsPerBlock>>>(dev_resp, d_final, f2, N);
+    reduce_kernel<<< numberOfBlocks, threadsPerBlock>>>(dev_resp, 0, d_final, N);
     j_error = cudaGetLastError();
     if(j_error != cudaSuccess) {printf("Error: %s\n", cudaGetErrorString(j_error)); exit(1);}
 
