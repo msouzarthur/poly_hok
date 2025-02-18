@@ -87,7 +87,7 @@ defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
 end
 def mapxy_2D_para_no_resp(d_array,  step,par1, par2, size, f) do
 
-    PolyHok.spawn_jit(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{trunc(size/16),trunc(size/16),1},{16,16,1},[d_array,step,par1,par2,size,f])
+    PolyHok.spawn(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{trunc(size/16),trunc(size/16),1},{16,16,1},[d_array,step,par1,par2,size,f])
     d_array
 end
 
