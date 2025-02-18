@@ -101,44 +101,67 @@ void loadSpheres(Sphere *vet, int size, float dim, float radius, float sum){
 
 #define SPHERES 20
 
-__global__ void kernel(int dim, Sphere * s,  int *ptr ) {
-    int x = threadIdx.x + blockIdx.x * blockDim.x;
-    int y = threadIdx.y + blockIdx.y * blockDim.y;
-    int offset = x + y * blockDim.x * gridDim.x;
-    float   ox = (x - dim/2);
-    float   oy = (y - dim/2);
-
-    float   r=0, g=0, b=0;
-    float   maxz = -99999;
-    for(int i=0; i<SPHERES; i++) {
-        float   n;
-        float   t = -99999;
-        float dx = ox - s[i].x;
-        float dy = oy - s[i].y;
-        float dz;
-        if (dx*dx + dy*dy < s[i].radius * s[i].radius) {
-            dz = sqrtf( s[i].radius * s[i].radius - dx*dx - dy*dy );
-            n = dz / sqrtf( s[i].radius * s[i].radius );
-            t = dz + s[i].z;
-
-        } else {
-            t = -99999;
-        }
-        if (t > maxz) {
-              float fscale = n;
-              r = s[i].r * fscale;
-              g = s[i].g * fscale;
-              b = s[i].b * fscale;
-              maxz = t;
-        }
-
-    }
-
-    ptr[offset*4 + 0] = (r * 255);
-    ptr[offset*4 + 1] = (g * 255);
-    ptr[offset*4 + 2] = (b * 255);
-    ptr[offset*4 + 3] = 255;
+__device__
+void raytracing(int *image, int width, float *spheres, int x, int y)
+{
+	float ox = 0.0;
+	float oy = 0.0;
+	ox = (x - (width / 2));
+	oy = (y - (width / 2));
+	float r = 0.0;
+	float g = 0.0;
+	float b = 0.0;
+	float maxz = (- 99999.0);
+for( int i = 0; i<20; i++){
+	float sphereRadius = spheres[((i * 7) + 3)];
+	float dx = (ox - spheres[((i * 7) + 4)]);
+	float dy = (oy - spheres[((i * 7) + 5)]);
+	float n = 0.0;
+	float t = (- 99999.0);
+	float dz = 0.0;
+if((((dx * dx) + (dy * dy)) < (sphereRadius * sphereRadius)))
+{
+	dz = sqrtf((((sphereRadius * sphereRadius) - (dx * dx)) - (dy * dy)));
+	n = (dz / sqrtf((sphereRadius * sphereRadius)));
+	t = (dz + spheres[((i * 7) + 6)]);
 }
+else{
+	t = (- 99999.0);
+	n = 0.0;
+}
+
+if((t > maxz))
+{
+	float fscale = n;
+	r = (spheres[((i * 7) + 0)] * fscale);
+	g = (spheres[((i * 7) + 1)] * fscale);
+	b = (spheres[((i * 7) + 2)] * fscale);
+	maxz = t;
+}
+
+}
+
+	image[0] = (r * 255);
+	image[1] = (g * 255);
+	image[2] = (b * 255);
+	image[3] = 255;
+}
+
+
+extern "C" __global__ void mapxy_2D_step_2_para_no_resp_kernel(int *d_array, int step, int par1, float *par2, int size)
+{
+	int x = (threadIdx.x + (blockIdx.x * blockDim.x));
+	int y = (threadIdx.y + (blockIdx.y * blockDim.y));
+	int offset = (x + ((y * blockDim.x) * gridDim.x));
+	int id = (step * offset);
+if((offset < (size * size)))
+{
+raytracing((d_array + id), par1, par2, x, y);
+}
+
+}
+
+
 
 
 int main(int argc, char *argv[]){
@@ -169,7 +192,8 @@ int main(int argc, char *argv[]){
     dim3    grids(dim/16,dim/16);
     dim3    threads(16,16);
 
-    kernel<<<grids,threads>>>(dim, s, dev_image);
+    mapxy_2D_step_2_para_no_resp_kernel<<<grids,threads>>>(dev_image, 4,dim,((float*) s), dim);
+   // kernel<<<grids,threads>>>(dim, s, dev_image);
 
     cudaMemcpy( final_image, dev_image, dim * dim * sizeof(int) * 4,cudaMemcpyDeviceToHost );
         
