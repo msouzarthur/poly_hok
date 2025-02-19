@@ -73,80 +73,6 @@ void genBpm (int height, int width, float *pixelbuffer_f) {
     free(pixelbuffer);
 }
 
-
-__device__
-int julia(int x, int y, int dim)
-{
-float scale = 0.1;
-float jx = ((scale * (dim - x)) / dim);
-float jy = ((scale * (dim - y)) / dim);
-float cr = (- 0.8);
-float ci = 0.156;
-float ar = jx;
-float ai = jy;
-for( int i = 0; i<200; i++){
-float nar = (((ar * ar) - (ai * ai)) + cr);
-float nai = (((ai * ar) + (ar * ai)) + ci);
-if((((nar * nar) + (nai * nai)) > 1.0e3))
-{
-return (0);
-}
-
-        ar = nar;
-        ai = nai;
-}
-
-return (1);
-}
-
-
-
-__device__ void* julia_ptr = (void*) julia;
-
-extern "C" void* get_julia_ptr()
-{
-        void* host_function_ptr;
-        cudaMemcpyFromSymbol(&host_function_ptr, julia_ptr, sizeof(void*));
-        return host_function_ptr;
-}
-
-
-
-__device__
-int julia_function(float *ptr, int x, int y, int dim)
-{
-int offset = (x + (y * dim));
-float juliaValue = julia(x, y, dim);
-        ptr[((offset * 4) + 0)] = (255 * juliaValue);
-        ptr[((offset * 4) + 1)] = 0;
-        ptr[((offset * 4) + 2)] = 0;
-        ptr[((offset * 4) + 3)] = 255;
-return (1);
-}
-
-__device__ void* julia_function_ptr = (void*) julia_function;
-
-extern "C" void* get_julia_function_ptr()
-{
-        void* host_function_ptr;
-        cudaMemcpyFromSymbol(&host_function_ptr, julia_function_ptr, sizeof(void*));
-        return host_function_ptr;
-}
-
-
-
-__global__
-void mapgen2D_xy_1para_noret_ker(float *resp, int arg1, int size, int (*f)(float*,int,int,int))
-{
-int x = ((blockIdx.x * blockDim.x) + threadIdx.x);
-int y = ((blockIdx.y * blockDim.y) + threadIdx.y);
-if(((x < size) && (y < size)))
-{
-int v = f(resp, x, y, arg1);
-}
-
-}
-
 int main( int argc, char const *argv[] ) {
 
     int usr_value = atoi(argv[1]);
@@ -154,7 +80,7 @@ int main( int argc, char const *argv[] ) {
     int height = usr_value;
     int width  = usr_value;
     int DIM = usr_value;
-    int size_array = height*width*4*sizeof(float);
+    int size_array = height*width*4*sizeof(int);
     cudaError_t j_error;
     
     //int pixelbytesize=  height*width*_bitsperpixel/8;
@@ -162,13 +88,13 @@ int main( int argc, char const *argv[] ) {
    
     float time;
     cudaEvent_t start, stop;   
-     cudaEventCreate(&start) ;
+    cudaEventCreate(&start) ;
     cudaEventCreate(&stop) ;
     cudaEventRecord(start, 0) ;
 
 
-     float *h_pixelbuffer = (float*)malloc(size_array);
-     float *d_pixelbuffer;
+     int *h_pixelbuffer = (int*)malloc(size_array);
+     int *d_pixelbuffer;
 
      ////////
     cudaMalloc( (void**)&d_pixelbuffer, size_array);
@@ -180,11 +106,11 @@ int main( int argc, char const *argv[] ) {
     ////////////////////
     dim3 grid(DIM,DIM);
 
-    int (*f)(float*,int,int,int) = (int (*)(float*,int,int,int)) get_julia_function_ptr();
+   // int (*f)(float*,int,int,int) = (int (*)(float*,int,int,int)) get_julia_function_ptr();
 
     mapgen2D_xy_1para_noret_ker<<<grid, 1>>>(d_pixelbuffer,DIM,DIM,f);
     
-  j_error = cudaGetLastError();
+    j_error = cudaGetLastError();
     if(j_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(j_error));
   ////////
 
