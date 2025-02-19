@@ -34,12 +34,12 @@ PolyHok.defmodule Julia do
         nar = (ar*ar - ai*ai) + cr
         nai = (ai*ar + ar*ai) + ci
         if ((nar * nar)+(nai * nai ) > 1000.0) do
-          0
+          return 0
         end
         ar = nar
         ai = nai
     end
-    1
+    return 1
   end
   defd julia_function(ptr,x,y,dim) do
     offset = x + y * dim # gridDim.x
