@@ -73,6 +73,58 @@ void genBpm (int height, int width, float *pixelbuffer_f) {
     free(pixelbuffer);
 }
 
+
+__device__
+int julia(int x, int y, int dim)
+{
+	float scale = 0.1;
+	float jx = ((scale * (dim - x)) / dim);
+	float jy = ((scale * (dim - y)) / dim);
+	float cr = (- 0.8);
+	float ci = 0.156;
+	float ar = jx;
+	float ai = jy;
+for( int i = 0; i<200; i++){
+	float nar = (((ar * ar) - (ai * ai)) + cr);
+	float nai = (((ai * ar) + (ar * ai)) + ci);
+if((((nar * nar) + (nai * nai)) > 1.0e3))
+{
+return (0);
+}
+
+	ar = nar;
+	ai = nai;
+}
+
+return (1);
+}
+
+
+__device__
+void julia_function(int *ptr, int x, int y, int dim)
+{
+	int offset = (x + (y * dim));
+	int juliaValue = julia(x, y, dim);
+	ptr[((offset * 4) + 0)] = (255 * juliaValue);
+	ptr[((offset * 4) + 1)] = 0;
+	ptr[((offset * 4) + 2)] = 0;
+	ptr[((offset * 4) + 3)] = 255;
+}
+
+
+extern "C" __global__ void mapgen2D_xy_1para_noret_ker(int *resp, int arg1, int size)
+{
+	int x = ((blockIdx.x * blockDim.x) + threadIdx.x);
+	int y = ((blockIdx.y * blockDim.y) + threadIdx.y);
+if(((x < size) && (y < size)))
+{
+julia_function(resp, x, y, arg1);
+}
+
+}
+
+
+
 int main( int argc, char const *argv[] ) {
 
     int usr_value = atoi(argv[1]);
@@ -108,7 +160,7 @@ int main( int argc, char const *argv[] ) {
 
    // int (*f)(float*,int,int,int) = (int (*)(float*,int,int,int)) get_julia_function_ptr();
 
-    mapgen2D_xy_1para_noret_ker<<<grid, 1>>>(d_pixelbuffer,DIM,DIM,f);
+    mapgen2D_xy_1para_noret_ker<<<grid, 1>>>(d_pixelbuffer,DIM,DIM);
     
     j_error = cudaGetLastError();
     if(j_error != cudaSuccess) printf("Error 3: %s\n", cudaGetErrorString(j_error));
