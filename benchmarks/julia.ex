@@ -64,7 +64,7 @@ PolyHok.defmodule Julia do
 
 
 
-    PolyHok.spawn_jit(&Julia.mapgen2D_xy_1para_noret_ker/4,{size,size,1},{1,1,1},[result_gpu,arg1,size,f])
+    PolyHok.spawn(&Julia.mapgen2D_xy_1para_noret_ker/4,{size,size,1},{1,1,1},[result_gpu,arg1,size,f])
     result_gpu
   end
 end
