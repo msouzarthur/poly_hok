@@ -18,6 +18,23 @@ defmodule DataSet do
     |> Enum.map(fn line -> words = String.split(line, " ", trim: true)
                            [ elem(Float.parse(Enum.at(words, 6)),0), elem(Float.parse(Enum.at(words,7)), 0) ] end  )
   end
+  def gen_data_set_nx_double(n) do
+    lat = (7 + Enum.random(0..63)) + :rand.uniform()
+    lon = (Enum.random(0..358)) + :rand.uniform()
+    acc = <<lat::float-little-64, lon::float-little-64>>
+    ref = gen_bin_data_double(n-1, acc)
+    %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,64}, shape: {n,2}, names:  [nil,nil]}
+  end
+  defp gen_bin_data_double(0, accumulator), do: accumulator
+  defp gen_bin_data_double(size, accumulator)
+    do
+      lat = (7 + Enum.random(0..63)) + :rand.uniform()
+      lon = (Enum.random(0..358)) + :rand.uniform()
+      gen_bin_data_double(
+        size - 1,
+        <<accumulator::binary, lat::float-little-64, lon::float-little-64>>
+      )
+    end
   def gen_data_set_nx(n) do
     lat = (7 + Enum.random(0..63)) + :rand.uniform()
     lon = (Enum.random(0..358)) + :rand.uniform()
@@ -154,7 +171,7 @@ end
 
 size = String.to_integer(arg)
 
-data_set_host = DataSet.gen_data_set_nx(size)
+data_set_host = DataSet.gen_data_set_nx_double(size)
 
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
