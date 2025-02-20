@@ -38,17 +38,8 @@ defmodule PolyHok do
   end
 
   defmacro gpufor({:<-,_, [var1, {:..,_, [_b1, e1]}]}, {:<-,_, [var2, {:..,_, [_b2, e2]}]},arr1,arr2, par3, do: body) do
-   # IO.inspect arr1
-   # IO.inspect arr2
-   # IO.inspect par3
-   # IO.inspect e1
-   # IO.inspect e2
-  #IO.puts "function"
-  #IO.inspect var1
-  #IO.inspect var2
-   # IO.puts("comp2xy2D1p #{inspect unquote(arr1)}")
-  #              #{inspect unquote(arr2)} #{inspect unquote(par3)} #{inspect unquote(e1)}
-  #                        #{inspect unquote(e2)}")
+
+       IO.inspect "Aqui"
        r=      quote do: MM.comp2xy2D1p(unquote(arr1), unquote(arr2), unquote(par3), unquote(e1), unquote(e2),
                                           PolyHok.hok (fn (unquote(arr1),
                                                        unquote(arr2),
