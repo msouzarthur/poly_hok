@@ -171,7 +171,7 @@ end
 
 size = String.to_integer(arg)
 
-data_set_host = DataSet.gen_data_set_nx_double(size)
+data_set_host = DataSet.gen_data_set_nx(size)
 
 #data_set_host = Nx.tensor(DataSet.gen_data_set(size),  type: {:f,32} )
 
