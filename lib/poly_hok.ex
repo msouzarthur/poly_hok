@@ -39,7 +39,7 @@ defmodule PolyHok do
 
   defmacro gpufor({:<-,_, [var1, {:..,_, [_b1, e1]}]}, {:<-,_, [var2, {:..,_, [_b2, e2]}]},arr1,arr2, par3, do: body) do
 
-       IO.inspect "Aqui"
+       #IO.inspect "Aqui"
        r=      quote do: MM.comp2xy2D1p(unquote(arr1), unquote(arr2), unquote(par3), unquote(e1), unquote(e2),
                                           PolyHok.phok (fn (unquote(arr1),
                                                        unquote(arr2),
@@ -837,7 +837,7 @@ end
 #######################################
 
 def spawn_st({:func, k, type}, t,b,l) do
-  IO.puts "Aqui!"
+  #IO.puts "Aqui!"
   f_name= case Macro.escape(k) do
     {:&, [],[{:/, [], [{{:., [], [_module, f_name]}, [no_parens: true], []}, _nargs]}]} -> f_name
      _ -> raise "Argument to spawn should be a function."
