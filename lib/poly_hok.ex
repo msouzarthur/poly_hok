@@ -5,7 +5,7 @@ defmodule PolyHok do
       #IO.puts("ok")
   end
 
-  defmacro hok({:fn, aa, [{:->, bb , [para,body]}] }) do
+  defmacro phok({:fn, aa, [{:->, bb , [para,body]}] }) do
    # IO.inspect "body: #{inspect body}"
     body =  PolyHok.CudaBackend.add_return(body)
     name = "anon_" <> PolyHok.CudaBackend.gen_lambda_name()

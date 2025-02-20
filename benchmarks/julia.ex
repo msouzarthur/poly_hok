@@ -60,11 +60,9 @@ PolyHok.defmodule Julia do
       f(resp,x,y,arg1)
     end
   end
-  def mapgen2D_step_xy_1para_noret(result_gpu,step, arg1, size,f) do
+  def mapgen2D_step_xy_1para_noret(result_gpu, arg1, size,f) do
 
-
-
-    PolyHok.spawn_jit(&Julia.mapgen2D_xy_1para_noret_ker/4,{size,size,1},{1,1,1},[result_gpu,arg1,size,f])
+    PolyHok.spawn(&Julia.mapgen2D_xy_1para_noret_ker/4,{size,size,1},{1,1,1},[result_gpu,arg1,size,f])
     result_gpu
   end
 end
@@ -82,7 +80,7 @@ result_gpu = PolyHok.new_gnx(dim*dim,4,{:s,32})
 prev = System.monotonic_time()
 
 _image = result_gpu
-  |> Julia.mapgen2D_step_xy_1para_noret(result_gpu,4,dim,dim, &Julia.julia_function/4)
+  |> Julia.mapgen2D_step_xy_1para_noret(dim,dim, &Julia.julia_function/4)
   |> PolyHok.get_gnx
 
 next = System.monotonic_time()
