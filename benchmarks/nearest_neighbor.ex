@@ -71,7 +71,7 @@ end
 
 
 PolyHok.defmodule NN do
-  include CAS
+  include CAS_Double
   def euclid_seq(l,lat,lng), do: euclid_seq_(l,lat,lng,[])
   def euclid_seq_([m_lat,m_lng|array],lat,lng,data) do
     # m_lat = Enum.at(array,0)
