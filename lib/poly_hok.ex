@@ -807,7 +807,7 @@ def spawn(k,t,b,l) do
 
   #(_n,_k,_t,_b,_size,_types,_l)
 
-  #IO.puts prog
+  IO.puts prog
   jit_compile_and_launch_nif(Kernel.to_charlist(kernel_name),Kernel.to_charlist(prog),t,b, length(args), types_args,args)
   #IO.inspect args
 
