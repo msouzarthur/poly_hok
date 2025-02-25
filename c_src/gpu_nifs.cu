@@ -391,7 +391,7 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
     cudaEventSynchronize(stop) ;
     cudaEventElapsedTime(&time, start, stop) ;
 
-    printf("cuda\t%s\t%3.1f\n", kernel_name,time);
+    printf("cuda%s\t%3.1f\n", kernel_name,time);
 
  
   err = cuLaunchKernel(function, b1, b2, b3,  // Nx1x1 blocks
