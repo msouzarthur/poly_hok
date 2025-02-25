@@ -810,7 +810,7 @@ def spawn(k,t,b,l) do
 
   #IO.puts prog
   next = System.monotonic_time()
-  IO.puts "Poly\t#{kernel_name}\t#{System.convert_time_unit(next-prev,:native,:microsecond)/1000.0}"
+  IO.puts "Poly#{kernel_name}\t#{System.convert_time_unit(next-prev,:native,:microsecond)/1000.0}"
 
   jit_compile_and_launch_nif(Kernel.to_charlist(kernel_name),Kernel.to_charlist(prog),t,b, length(args), types_args,args)
   #IO.inspect args
