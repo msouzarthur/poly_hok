@@ -45,14 +45,14 @@ m = String.to_integer(arg)
 #mat1 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 #mat2 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 
-mat1 = PolyHok.new_nx_from_function(1,m*m,{:f,32},fn -> :rand.uniform(1000) end )
-mat2 = PolyHok.new_nx_from_function(1,m*m,{:f,32},fn -> :rand.uniform(1000) end)
+mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end )
+mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
 
 prev = System.monotonic_time()
 
 
 
-_result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
+result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
             sum = 0
             for i in range(0,m,1) do
                   sum = sum + mat1[x * m + i] * mat2[i * m + y]
@@ -65,6 +65,10 @@ _result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
 next = System.monotonic_time()
 
 IO.puts "PolyHok\t#{m}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
+
+r2 = Nx.dot(mat1,mat2)
+
+IO.inspect Nx.equal(result,r2)
 
 #IO.inspect result
 
