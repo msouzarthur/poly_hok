@@ -45,8 +45,11 @@ m = String.to_integer(arg)
 #mat1 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 #mat2 = Matrex.new(1, m*m, fn -> :rand.uniform(1000) end)
 
-mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end )
-mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
+#mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end )
+#mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
+
+mat1 = Nx.tensor(Enum.to_list(1..m), shape: {m, m}, type: :f32)
+mat2 = Nx.tensor(Enum.to_list(1..m), shape: {m, m}, type: :f32)
 
 prev = System.monotonic_time()
 
