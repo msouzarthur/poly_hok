@@ -50,7 +50,7 @@ result = PolyHok.get_gnx(c)
 
 r2 = Nx.dot(mat1,mat2)
 
-IO.inspect Nx.equal(result,r2)
+#IO.inspect Nx.equal(result,r2)
 IO.inspect result
 IO.inspect r2
 
