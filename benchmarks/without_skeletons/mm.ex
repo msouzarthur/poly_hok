@@ -48,7 +48,7 @@ PolyHok.spawn(&MM.mm/6,{grid_rows,grid_cols,1},{block_size,block_size,1},[a,b,c,
 
 result = PolyHok.get_gnx(c)
 
-r2 = Nx.dot(mat1,mat2)
+r2 = Nx.dot(mat2,mat1)
 
 #IO.inspect Nx.equal(result,r2)
 IO.inspect result
