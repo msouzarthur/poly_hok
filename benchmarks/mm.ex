@@ -48,8 +48,8 @@ m = String.to_integer(arg)
 #mat1 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end )
 #mat2 = PolyHok.new_nx_from_function(m,m,{:f,32},fn -> :rand.uniform(1000) end)
 
-mat1 = Nx.tensor(Enum.to_list(1..m), type: :f32)
-mat2 = Nx.tensor(Enum.to_list(1..m),  type: :f32)
+mat1 = Nx.tensor(Enum.to_list(1..(m*m)), type: :f32)
+mat2 = Nx.tensor(Enum.to_list(1..(m*m)),  type: :f32)
 
 mat1 = Nx.reshape(mat1,{m,m})
 mat2 = Nx.reshape(mat2,{m,m})
