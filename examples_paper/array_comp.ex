@@ -39,8 +39,8 @@ PolyHok.defmodule PMap do
  def comp_func(arr1,arr2,size,f) do
     d_arr1 = PolyHok.new_gnx(arr1)
     d_arr2 = PolyHok.new_gnx(arr2)
-    shape = PolyHok.get_shape(arr1)
-    type = PolyHok.get_type(arr1)
+    shape = PolyHok.get_shape(d_arr1)
+    type = PolyHok.get_type(d_arr1)
     result_gpu = PolyHok.new_gnx(shape,type)
 
     threadsPerBlock = 128;
