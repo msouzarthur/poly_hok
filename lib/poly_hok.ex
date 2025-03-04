@@ -30,7 +30,7 @@ defmodule PolyHok do
       |> PolyHok.get_gnx
    end
    defmacro gpu_for({:<-,_, [var1, {:..,_, [_b1, e1]}]}, arr1, arr2,do: body) do
-    r=      quote do: Comp.comp_xy_2arrays(unquote(arr1), unquote(arr2), unquote(e1),
+    r=      quote do: PMap.comp_func(unquote(arr1), unquote(arr2), unquote(e1),
                                        PolyHok.phok (fn (unquote(arr1),
                                                     unquote(arr2),
                                                     unquote(var1)) -> (unquote body) end))
