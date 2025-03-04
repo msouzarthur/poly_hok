@@ -22,7 +22,7 @@ PolyHok.defmodule PMap do
     threadsPerBlock = 128;
     numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
 
-    PolyHok.spawn(&PMap.map_ske/4,
+    PolyHok.spawn(&PMap.map_ker/4,
               {numberOfBlocks,1,1},
               {threadsPerBlock,1,1},
               [input,result_gpu,size, f])
