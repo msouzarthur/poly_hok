@@ -57,6 +57,7 @@ end
 a = Nx.tensor([[1,2,3,4]],type: {:s, 32})
 b = Nx.tensor([[1,2,3,4]],type: {:s, 32})
 
+size = 4
 
 host_resp = PolyHok.gpu_for n <- a,  do: n * n
 
