@@ -36,7 +36,7 @@ PolyHok.defmodule PMap do
           resp[i] = f(a1,a2,i)
     end
   end
- def comp_func(arr1,arr2,size,func) do
+ def comp_func(arr1,arr2,size,f) do
     d_arr1 = PolyHok.new_gnx(arr1)
     d_arr2 = PolyHok.new_gnx(arr2)
     shape = PolyHok.get_shape(arr1)
