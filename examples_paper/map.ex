@@ -2,7 +2,7 @@ require PolyHok
 
 PolyHok.defmodule PMap do
   defk map_ker(a1,a2,size,f) do
-    var id int = blockIdx.x * blockDim.x + threadIdx.x
+    id = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
     for i in range(index,size,stride) do
@@ -12,21 +12,20 @@ PolyHok.defmodule PMap do
   defd inc(x) do
     x+1
   end
-  def map(v1, f) do
-    {l,c} = Hok.get_shape_gnx(v1)
-    type = Hok.get_type_gnx(v1)
-    size = l*c
+  def map(input, f) do
+    shape = PolyHok.get_shape(input)
+    type = PolyHok.get_type(input)
+    result_gpu = PolyHok.new_gnx(shape,type)
 
+    size = Tuple.product(shape)
     threadsPerBlock = 128;
     numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
 
-    result_gpu =Hok.new_gnx(l,c,type)
-
-
-
-    Hok.spawn_jit(&PMap.map_ske/4,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[v1,result_gpu,size, f])
+    PolyHok.spawn(&PMap.map_ske/4,
+              {numberOfBlocks,1,1},
+              {threadsPerBlock,1,1},
+              [input,result_gpu,size, f])
     result_gpu
-
   end
 
 end
@@ -49,7 +48,7 @@ func = Hok.hok fn (x) -> x + 1 end
 prev = System.monotonic_time()
 
 gtensor1
-    |> PMap.map(func)
+    |> PMap.map()
     |> Hok.get_gnx
     |> IO.inspect
 
