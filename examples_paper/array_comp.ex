@@ -50,7 +50,7 @@ PolyHok.defmodule PMap do
               {numberOfBlocks,1,1},
               {threadsPerBlock,1,1},
               [d_arr1,d_arr2,result_gpu,size, f])
-    result_gpu
+    PolyHok.get_gnx result_gpu
  end
 end
 
