@@ -23,11 +23,17 @@ defmodule PolyHok do
 
   end
 
-defmacro gpu_for({:<-, _ ,[var,tensor]},do: b)  do
-    quote do: PolyHok.new_gnx(unquote(tensor))
-              |> PMap.map(PolyHok.phok (fn (unquote(var)) -> (unquote b) end))
-              |> PolyHok.get_gnx
-end
+  defmacro gpu_for({:<-, _ ,[var,tensor]},do: b)  do
+    quote do:
+      PolyHok.new_gnx(unquote(tensor))
+      |> PMap.map(PolyHok.phok(fn (unquote(var))->(unquote b) end))
+      |> PolyHok.get_gnx
+   end
+#defmacro gpu_for({:<-, _ ,[var,tensor]},do: b)  do
+#    quote do: PolyHok.new_gnx(unquote(tensor))
+#              |> PMap.map(PolyHok.phok (fn (unquote(var)) -> (unquote b) end))
+#              |> PolyHok.get_gnx
+#end
   defmacro gpufor({:<-, _ ,[var,tensor]},do: b)  do
       quote do: Comp.comp(unquote(tensor), PolyHok.phok (fn (unquote(var)) -> (unquote b) end))
   end
