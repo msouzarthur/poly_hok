@@ -3,11 +3,11 @@ require PolyHok
 
 PolyHok.defmodule PMap do
   defk map_ker(a1,a2,size,f) do
-    id = blockIdx.x * blockDim.x + threadIdx.x
+    index = blockIdx.x * blockDim.x + threadIdx.x
     stride = blockDim.x * gridDim.x
 
     for i in range(index,size,stride) do
-          a2[id] = f(a1[id])
+          a2[i] = f(a1[i])
     end
   end
   defd inc(x) do
