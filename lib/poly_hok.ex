@@ -29,6 +29,15 @@ defmodule PolyHok do
       |> PMap.map(PolyHok.phok(fn (unquote(var))->(unquote b) end))
       |> PolyHok.get_gnx
    end
+   defmacro gpu_for({:<-,_, [var1, {:..,_, [_b1, e1]}]}, arr1, arr2,do: body) do
+    r=      quote do: Comp.comp_xy_2arrays(unquote(arr1), unquote(arr2), unquote(e1),
+                                       PolyHok.phok (fn (unquote(arr1),
+                                                    unquote(arr2),
+                                                    unquote(var1)) -> (unquote body) end))
+   #IO.inspect r
+    #raise "hell"
+    r
+end
 #defmacro gpu_for({:<-, _ ,[var,tensor]},do: b)  do
 #    quote do: PolyHok.new_gnx(unquote(tensor))
 #              |> PMap.map(PolyHok.phok (fn (unquote(var)) -> (unquote b) end))
