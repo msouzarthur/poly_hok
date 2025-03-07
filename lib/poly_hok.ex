@@ -785,7 +785,7 @@ end
 ##### and leave a call to spawn
 
 def spawn(k,t,b,l) do
-  prev = System.monotonic_time()
+ # prev = System.monotonic_time()
   kernel_name = JIT.get_kernel_name(k)
   {kast,fun_graph} = case load_ast(k) do
             {a,g} -> {a,g}
@@ -829,8 +829,8 @@ def spawn(k,t,b,l) do
   #(_n,_k,_t,_b,_size,_types,_l)
 
   #IO.puts prog
-  next = System.monotonic_time()
-  IO.puts "Poly#{kernel_name}\t#{System.convert_time_unit(next-prev,:native,:microsecond)/1000.0}"
+  #next = System.monotonic_time()
+  #IO.puts "Poly#{kernel_name}\t#{System.convert_time_unit(next-prev,:native,:microsecond)/1000.0}"
 
   jit_compile_and_launch_nif(Kernel.to_charlist(kernel_name),Kernel.to_charlist(prog),t,b, length(args), types_args,args)
   #IO.inspect args

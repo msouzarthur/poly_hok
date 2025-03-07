@@ -198,11 +198,11 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
 
     /// START COLLECTING TIME
 
-    float time;
-    cudaEvent_t start, stop;   
-     cudaEventCreate(&start) ;
-    cudaEventCreate(&stop) ;
-    cudaEventRecord(start, 0) ;
+    //float time;
+    //cudaEvent_t start, stop;   
+    // cudaEventCreate(&start) ;
+    //cudaEventCreate(&stop) ;
+    //cudaEventRecord(start, 0) ;
   
   /////////// get name kernel
 
@@ -265,7 +265,7 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
 
   char* ptx = compile_to_ptx(env,code);
  
-  init_cuda(env);
+  //init_cuda(env);
  // int device =0;
  // CUcontext  context2 = NULL;
  // err = cuCtxCreate(&context2, 0, device);
@@ -388,11 +388,11 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
 
   /// END COLLECTING TIME
 
-  cudaEventRecord(stop, 0) ;
-    cudaEventSynchronize(stop) ;
-    cudaEventElapsedTime(&time, start, stop) ;
+ // cudaEventRecord(stop, 0) ;
+  //  cudaEventSynchronize(stop) ;
+  //  cudaEventElapsedTime(&time, start, stop) ;
 
-    printf("cuda%s\t%3.1f\n", kernel_name,time);
+   // printf("cuda%s\t%3.1f\n", kernel_name,time);
 
  
   err = cuLaunchKernel(function, b1, b2, b3,  // Nx1x1 blocks
