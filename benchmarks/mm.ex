@@ -58,7 +58,7 @@ prev = System.monotonic_time()
 
 
 
-result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
+_result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
             sum = 0
             for i in range(0,m,1) do
                   sum = sum + mat1[x * m + i] * mat2[i * m + y]
@@ -71,15 +71,6 @@ result = PolyHok.gpufor x <- 0..m, y <- 0..m, mat1, mat2,m do
 next = System.monotonic_time()
 
 IO.puts "PolyHok\t#{m}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
-
-r2 = Nx.dot(mat1,mat2)
-
-IO.inspect Nx.equal(result,r2)
-IO.inspect result
-IO.inspect r2
-#IO.inspect result
-
-#IO.inspect Nx.sum(result)
 
 #PolyHok.null(mat1)
 #PolyHok.null(mat2)
