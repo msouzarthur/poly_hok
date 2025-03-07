@@ -17,19 +17,19 @@ void init_cuda(ErlNifEnv *env)
     {
        CUresult err;
        CUdevice   device;
-       //int device = 0;
+       int device = 0;
       // printf("aqui!\n");
        cuInit(0);
 
-       err = cuDeviceGet(&device, 0);
-       if(err != CUDA_SUCCESS)  
-      { char message[200];
-        const char *error;
-        cuGetErrorString(err, &error);
-        strcpy(message,"Error get device (init_cuda): ");
-        strcat(message, error);
-        enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
-      }
+       //err = cuDeviceGet(&device, 0);
+       //if(err != CUDA_SUCCESS)  
+      //{ char message[200];
+      //  const char *error;
+      //  cuGetErrorString(err, &error);
+      //  strcpy(message,"Error get device (init_cuda): ");
+      //  strcat(message, error);
+      //  enif_raise_exception(env,enif_make_string(env, message, ERL_NIF_LATIN1));
+      //}
 
        err = cuCtxCreate(&context, 0, device);
       // printf("Context created: %p",context);
