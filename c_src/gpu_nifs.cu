@@ -20,7 +20,7 @@ void init_cuda(ErlNifEnv *env)
       // printf("aqui!\n");
        cuInit(0);
        err = cuCtxCreate(&context, 0, device);
-       printf("Context created: %p",context);
+      // printf("Context created: %p",context);
        if(err != CUDA_SUCCESS)  
       { char message[200];
         const char *error;
