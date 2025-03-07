@@ -191,7 +191,7 @@ char* compile_to_ptx(ErlNifEnv *env, char* program_source) {
 
 
 static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]) {
-
+    printf("inicio\n");
     ERL_NIF_TERM list_types;
     ERL_NIF_TERM head_types;
     ERL_NIF_TERM tail_types;
