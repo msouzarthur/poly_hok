@@ -274,9 +274,10 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
   int ints_ptr=0;
   // printf("%s\n",code);
    //printf("Args: %d %d %d %d %d %d\n",b1,b2,b3,t1,t2,t3);
-
+  printf("jit compile\n");
   char* ptx = compile_to_ptx(env,code);
- 
+   printf("after jit compile\n");
+
   //init_cuda(env);
  // int device =0;
  // CUcontext  context2 = NULL;
