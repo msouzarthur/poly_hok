@@ -21,7 +21,7 @@ void init_cuda(ErlNifEnv *env)
       // printf("aqui!\n");
        cuInit(0);
 
-       cuDeviceGet(&device, 0);
+       err = cuDeviceGet(&device, 0);
        if(err != CUDA_SUCCESS)  
       { char message[200];
         const char *error;
