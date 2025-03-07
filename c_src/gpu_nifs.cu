@@ -16,7 +16,7 @@ void init_cuda(ErlNifEnv *env)
   if (context == NULL)
     {
        CUresult err;
-       CUdevice   device;
+       //CUdevice   device;
        int device = 0;
       // printf("aqui!\n");
        cuInit(0);
