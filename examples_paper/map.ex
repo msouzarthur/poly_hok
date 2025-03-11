@@ -31,10 +31,10 @@ end
 #a = Hok.hok (fn x,y -> x+y end)
 #IO.inspect a
 #raise "hell"
-
-arr1 = Nx.tensor([[1,2,3,4]],type: {:s, 32})
-arr2 = Nx.tensor([[1,2,3,4]],type: {:f, 32})
-arr3 = Nx.tensor([[1,2,3,4]],type: {:f, 64})
+n = 10000000
+arr1 = Nx.tensor([Enum.to_list(0..n)],type: {:s, 32})
+arr2 = Nx.tensor([Enum.to_list(0..n)],type: {:f, 32})
+arr3 = Nx.tensor([Enum.to_list(0..n)],type: {:f, 64})
 
 host_res1 = arr1
     |> PolyHok.new_gnx
