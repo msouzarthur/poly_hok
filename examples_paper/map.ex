@@ -52,21 +52,6 @@ host_res3 = arr3
     |> PMap.map(PolyHok.phok fn (x) -> x + 1 end)
     |> PolyHok.get_gnx
 
-
-gtensor1
-    |> PMap.map()
-    |> Hok.get_gnx
-    |> IO.inspect
-
-gtensor2
-    |> PMap.map(func)
-    |> Hok.get_gnx
-    |> IO.inspect
-
-gtensor3
-    |> PMap.map(func)
-    |> Hok.get_gnx
-    |> IO.inspect
-
-next = System.monotonic_time()
-IO.puts "Hok\t\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
+IO.inspect host_res1
+IO.inspect host_res2
+IO.inspect host_res3
