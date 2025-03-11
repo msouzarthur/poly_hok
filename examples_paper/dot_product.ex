@@ -83,7 +83,7 @@ include CAS
 end
 
 
-n = 10000000
+n = 100
 arr1 = Nx.tensor([Enum.to_list(1..n)],type: {:s, 32})
 arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
 
