@@ -85,7 +85,7 @@ end
 
 
 n = 100
-arr1 = Nx.tensor([replicate(n,1)],type: {:s, 32})
+arr1 = Nx.tensor([Ske.replicate(n,1)],type: {:s, 32})
 arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
 
 
