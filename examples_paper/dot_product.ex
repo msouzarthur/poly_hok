@@ -90,4 +90,4 @@ arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
 
 host_resp = Ske.dot_product(arr1,arr2)
 
-IO.inpsect host_resp
+IO.inspect host_resp
