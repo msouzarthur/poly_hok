@@ -16,7 +16,6 @@ PolyHok.defmodule PMap do
     shape = PolyHok.get_shape(input)
     type = PolyHok.get_type(input)
     result_gpu = PolyHok.new_gnx(shape,type)
-
     size = Tuple.product(shape)
     threadsPerBlock = 128;
     numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
