@@ -72,6 +72,7 @@ include CAS
       current_value = ref4[0]
     end
   end
+ end
   def dot_product(arr1,arr2) do
     arr1
     |> PolyHok.new_gnx
