@@ -80,11 +80,12 @@ include CAS
     |> Ske.reduce(0.0, PolyHok.phok fn (a,b)->a + b end)
     |> PolyHok.get_gnx
    end
+   def replicate(n, x), do: (for _ <- 1..n, do: x)
 end
 
 
 n = 100
-arr1 = Nx.tensor([Enum.to_list(1..n)],type: {:s, 32})
+arr1 = Nx.tensor([replicate(n,1)]],type: {:s, 32})
 arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
 
 
