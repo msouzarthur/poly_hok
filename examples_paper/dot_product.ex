@@ -77,7 +77,7 @@ include CAS
     arr1
     |> PolyHok.new_gnx
     |> Ske.map2(PolyHok.new_gnx(arr2), PolyHok.phok fn (a,b)->a * b end)
-    |> Ske.reduce(0.0, PolyHok.phok fn (a,b)->a + b end)
+    |> Ske.reduce(0, PolyHok.phok fn (a,b)->a + b end)
     |> PolyHok.get_gnx
    end
    def replicate(n, x), do: (for _ <- 1..n, do: x)
@@ -85,8 +85,8 @@ end
 
 
 n = 1000
-arr1 = Nx.tensor([Ske.replicate(n,1)],type: {:f, 32})
-arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
+arr1 = Nx.tensor([Ske.replicate(n,1)],type: {:s, 32})
+arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:s, 32})
 
 
 host_resp = Ske.dot_product(arr1,arr2)
