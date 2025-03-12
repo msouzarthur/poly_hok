@@ -2,7 +2,7 @@ require PolyHok
 #Nx.default_backend(EXLA.Backend)
 #import Nx
 PolyHok.defmodule Ske do
-include CAS_Int
+include CAS
   defk map_2kernel(a1,a2,a3,size,f) do
     id = blockIdx.x * blockDim.x + threadIdx.x
     if(id < size) do
@@ -85,8 +85,8 @@ end
 
 
 n = 1000
-arr1 = Nx.tensor([Ske.replicate(n,1)],type: {:s, 32})
-arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:s, 32})
+arr1 = Nx.tensor([Ske.replicate(n,1)],type: {:f, 32})
+arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
 
 
 host_resp = Ske.dot_product(arr1,arr2)
