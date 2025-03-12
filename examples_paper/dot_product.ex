@@ -77,7 +77,7 @@ include CAS
     arr1
     |> PolyHok.new_gnx
     |> Ske.map2(PolyHok.new_gnx(arr2), PolyHok.phok fn (a,b)->a * b end)
-    |> Ske.reduce(0, PolyHok.phok fn (a,b)->a + b end)
+    |> Ske.reduce(0.0, PolyHok.phok fn (a,b)->a + b end)
     |> PolyHok.get_gnx
    end
    def replicate(n, x), do: (for _ <- 1..n, do: x)
