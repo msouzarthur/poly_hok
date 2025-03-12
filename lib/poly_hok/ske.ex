@@ -26,7 +26,7 @@ PolyHok.defmodule Ske do
       size = l*step
       nBlocks = floor ((size + block_size - 1) / block_size)
 
-        PolyHok.spawn(&PolyHok.Ske.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,l,f])
+        PolyHok.spawn(&SkeKernels.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,l,f])
         d_array
     end
     def map(input, f) do
