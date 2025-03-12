@@ -270,6 +270,7 @@ def new_gnx(%Nx.Tensor{data: data, type: type, shape: shape, names: name}) do
   {l,c} = case shape do
     {c} -> {1,c}
     {l,c} -> {l,c}
+    {l1,l2,c} -> {l1*l2,c}
   end
   ref = case type do
      {:f,32} -> create_gpu_array_nx_nif(array,l,c,Kernel.to_charlist("float"))
@@ -307,6 +308,18 @@ def new_gnx({l,c},type) do
 
   {:nx, type, {l,c}, [nil,nil] , ref}
  end
+def new_gnx({d1,d2,d3}, type) do
+  {l,c} = {d1*d2,d3}
+  ref = case type do
+    {:f,32} -> new_gpu_array_nif(l,c,Kernel.to_charlist("float"))
+    {:f,64} -> new_gpu_array_nif(l,c,Kernel.to_charlist("double"))
+    {:s,32} -> new_gpu_array_nif(l,c,Kernel.to_charlist("int"))
+    x -> raise "new_gnx: type #{x} not suported"
+ end
+
+ {:nx, type, {d1,d2,d3}, [nil,nil,nil] , ref}
+
+end
 def get_gnx({:matrex, ref, {rows,columns}}) do
   bin = get_gpu_array_nif(ref,rows,columns,Kernel.to_charlist("float"))
   array = <<rows::unsigned-integer-little-32, columns::unsigned-integer-little-32,bin::binary>>
@@ -314,7 +327,11 @@ def get_gnx({:matrex, ref, {rows,columns}}) do
 end
 def get_gnx({:nx, type, shape, name , ref}) do
   #IO.puts "aqui..."
-  {l,c} = shape
+  {l,c} = case shape do
+    {c} -> {1,c}
+    {l,c} -> {l,c}
+    {d1,d2,d3} -> {d1*d2,d3}
+  end
   ref = case type do
     {:f,32} -> get_gpu_array_nif(ref,l,c,Kernel.to_charlist("float"))
     {:f,64} -> get_gpu_array_nif(ref,l,c,Kernel.to_charlist("double"))
