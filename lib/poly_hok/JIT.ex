@@ -256,10 +256,10 @@ end
 def process_module(module_name,body) do
 
   # initiate server that collects types and asts
-  IO.inspect Process.whereis(:module_server)
-  pid = spawn_link(fn -> module_server(%{},%{}) end)
-  Process.register(pid, :module_server)
-
+  if (Process.whereis(:module_server) == nil) do
+    pid = spawn_link(fn -> module_server(%{},%{}) end)
+    Process.register(pid, :module_server)
+  end
   case body do
       {:__block__, [], definitions} ->  process_definitions(module_name,definitions)
       _   -> process_definitions(module_name,[body])
