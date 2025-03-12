@@ -29,7 +29,7 @@ include CAS
      {l,c} = PolyHok.get_shape_gnx(ref)
      type = PolyHok.get_type_gnx(ref)
      size = l*c
-      result_gpu  = PolyHok.new_gnx(Nx.tensor([[0]] , type: type))
+      result_gpu  = PolyHok.new_gnx(Nx.tensor([[initial]] , type: type))
 
       threadsPerBlock = 256
       blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
