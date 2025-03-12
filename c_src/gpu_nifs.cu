@@ -407,7 +407,8 @@ printf("after arguments and types\n");
 
    // printf("cuda%s\t%3.1f\n", kernel_name,time);
 
- 
+    init_cuda(env);
+
   err = cuLaunchKernel(function, b1, b2, b3,  // Nx1x1 blocks
                                     t1, t2, t3,            // 1x1x1 threads
                                     0, 0, args, 0) ;
