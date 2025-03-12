@@ -34,17 +34,17 @@ include CAS_Int
       threadsPerBlock = 256
       blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
       numberOfBlocks = blocksPerGrid
-      PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref, initial,result_gpu, f, size])
+      PolyHok.spawn(&Ske.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, f, size])
       result_gpu
   end
-  defk reduce_kernel(a, initial, ref4, f,n) do
+  defk reduce_kernel(a,  ref4, f,n) do
 
     __shared__ cache[256]
 
     tid = threadIdx.x + blockIdx.x * blockDim.x;
     cacheIndex = threadIdx.x
 
-    temp = initial # 0.0
+    temp = ref4[0]
 
     while (tid < n) do
       temp = f(a[tid], temp)
