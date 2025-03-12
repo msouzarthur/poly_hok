@@ -65,6 +65,4 @@ IO.inspect host_resp
 
 host_resp = PolyHok.gpu_for i <- 0..size, a, b, do:  2 * a[i] + b[i]
 
-#host_resp = PolyHok.gpu_for i <- 0..size, a, b, do: a[i] * b[i]
-
 IO.inspect host_resp
