@@ -256,6 +256,7 @@ end
 def process_module(module_name,body) do
 
   # initiate server that collects types and asts
+  IO.inspect Process.alive?(:module_server)
   pid = spawn_link(fn -> module_server(%{},%{}) end)
   Process.register(pid, :module_server)
 
