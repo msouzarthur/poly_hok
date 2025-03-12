@@ -37,7 +37,7 @@ PolyHok.defmodule Ske do
       threadsPerBlock = 128;
       numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
   
-      PolyHok.spawn(&SKe.map_ker/4,
+      PolyHok.spawn(&Ske.map_ker/4,
                 {numberOfBlocks,1,1},
                 {threadsPerBlock,1,1},
                 [input,result_gpu,size, f])
