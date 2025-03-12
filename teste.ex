@@ -1,5 +1,5 @@
 require PolyHok
-require PolyHok.Ske
+require Ske
 
 n = 1000
 
