@@ -1,6 +1,7 @@
 require PolyHok
 require PolyHok.Ske
 
+n = 1000
 
 arr1 = Nx.tensor([Enum.to_list(1..n)],type: {:s, 32})
 arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
