@@ -277,7 +277,7 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
  
   char* ptx = compile_to_ptx(env,code);
  
-  //init_cuda(env);
+  init_cuda(env);
  // int device =0;
  // CUcontext  context2 = NULL;
  // err = cuCtxCreate(&context2, 0, device);
