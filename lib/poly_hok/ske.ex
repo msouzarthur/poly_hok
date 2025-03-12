@@ -1,4 +1,23 @@
 require PolyHok
+PolyHok.defmodule SkeKernels do
+  defk map_ker(a1,a2,size,f) do
+    index = blockIdx.x * blockDim.x + threadIdx.x
+    stride = blockDim.x * gridDim.x
+
+    for i in range(index,size,stride) do
+          a2[i] = f(a1[i])
+    end
+  end
+ defk map_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
+    globalId  = blockDim.x * ( gridDim.x * blockIdx.y + blockIdx.x ) + threadIdx.x
+    id  = step * globalId
+    #f(id,id)
+    if (globalId < size) do
+      f(d_array+id,par1,par2)
+    end
+  end
+
+end
 
 defmodule PolyHok.Ske do
   @defaults %{coord: false, return: true, dim: :one}
@@ -32,25 +51,7 @@ defmodule PolyHok.Ske do
       result_gpu
     end
   end
-PolyHok.defmodule SkeKernels do
-  defk map_ker(a1,a2,size,f) do
-    index = blockIdx.x * blockDim.x + threadIdx.x
-    stride = blockDim.x * gridDim.x
 
-    for i in range(index,size,stride) do
-          a2[i] = f(a1[i])
-    end
-  end
- defk map_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
-    globalId  = blockDim.x * ( gridDim.x * blockIdx.y + blockIdx.x ) + threadIdx.x
-    id  = step * globalId
-    #f(id,id)
-    if (globalId < size) do
-      f(d_array+id,par1,par2)
-    end
-  end
-
-end
 
 
 
