@@ -54,8 +54,8 @@ PolyHok.defmodule PMap do
  end
 end
 
-a = Nx.tensor([[1,2,3,4]],type: {:f, 32})
-b = Nx.tensor([[1,2,3,4]],type: {:f, 32})
+a = Nx.tensor([[1,2,3,4]],type: {:s, 32})
+b = Nx.tensor([[1,2,3,4]],type: {:s, 32})
 
 size = Tuple.product(Nx.shape(a))
 
