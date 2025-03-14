@@ -96,7 +96,7 @@ n = String.to_integer(arg)
 #vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 0.1 end )
 
 vet1 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 1 end )
-vet2 = Nx.tensor(DP.rep_change(n,1))
+vet2 = Nx.tensor(DP.rep_change(n,1), type: {:f,32})
 #vet1 = Nx.iota({1,n}, type: :f32)
 #vet2 = Nx.iota({1,n}, type: :f32)
 
