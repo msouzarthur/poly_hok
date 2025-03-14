@@ -108,6 +108,7 @@ vet2 = Nx.tensor(DP.rep_change(n,1), type: {:f,32})
 
 prev = System.monotonic_time()
 
+IO.inspect vet2
 
 ref1 = PolyHok.new_gnx(vet1)
 
