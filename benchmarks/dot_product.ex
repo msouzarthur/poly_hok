@@ -79,7 +79,7 @@ include CAS
   def rep_pos(0,_x), do: []
   def rep_pos(n,x), do:  [x | rep_neg(n-1,x)]
   def rep_neg(0,_x), do: []
-  def rep_neg(n,x), do:  [x | rep_pos(n-1,x)]
+  def rep_neg(n,x), do:  [-x | rep_pos(n-1,x)]
 end
 
 #PolyHok.include [DP]
