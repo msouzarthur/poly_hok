@@ -297,6 +297,18 @@ def new_gnx(l,c,type) do
 
  {:nx, type, {l,c}, [nil,nil] , ref}
 end
+def new_gnx({c},type) do
+  l = 1
+  # IO.puts "aque"
+   ref = case type do
+     {:f,32} -> new_gpu_array_nif(l,c,Kernel.to_charlist("float"))
+     {:f,64} -> new_gpu_array_nif(l,c,Kernel.to_charlist("double"))
+     {:s,32} -> new_gpu_array_nif(l,c,Kernel.to_charlist("int"))
+     x -> raise "new_gnx: type #{x} not suported"
+  end
+
+  {:nx, type, {c}, [nil] , ref}
+ end
 def new_gnx({l,c},type) do
   # IO.puts "aque"
    ref = case type do
