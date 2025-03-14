@@ -54,8 +54,8 @@ PolyHok.defmodule PMap do
  end
 end
 
-a = Nx.tensor(Enum.to_list(1..100),type: {:s, 32})
-b = Nx.tensor(Enum.to_list(1..100),type: {:s, 32})
+a = Nx.tensor(Enum.to_list(1..1000),type: {:s, 32})
+b = Nx.tensor(Enum.to_list(1..1000),type: {:s, 32})
 
 size = Tuple.product(Nx.shape(a))
 
