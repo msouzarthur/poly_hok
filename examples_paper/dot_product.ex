@@ -84,7 +84,7 @@ include CAS
 end
 
 
-n = 1000
+n = 10000
 arr1 = Nx.tensor([Ske.replicate(n,1)],type: {:f, 32})
 arr2 = Nx.tensor([Enum.to_list(1..n)],type: {:f, 32})
 
