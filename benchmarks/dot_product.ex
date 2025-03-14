@@ -75,6 +75,11 @@ include CAS
 
   end
   def replicate(n, x), do: (for _ <- 1..n, do: x)
+  def rep_change(n,x), do: rep_pos(n,x)
+  def rep_pos(0,_x), do: []
+  def rep_pos(n,x), do:  [x | rep_neg(n-1,x)]
+  def rep_neg(0,_x), do: []
+  def rep_neg(n,x), do:  [x | rep_pos(n-1,x)]
 end
 
 #PolyHok.include [DP]
@@ -87,9 +92,11 @@ n = String.to_integer(arg)
 #{vet1,_} = Nx.Random.uniform(Nx.Random.key(1), shape: {1, n}, type: :f32)
 #{vet2,_} = Nx.Random.uniform(Nx.Random.key(1), shape: {1, n}, type: :f32)
 
-vet1 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 1 end )
-vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 0.1 end )
+#vet1 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 1 end )
+#vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 0.1 end )
 
+vet1 = PolyHok.new_nx_from_function(1,n,{:f,32},fn -> 1 end )
+vet2 = Nx.tensor(rep_change(n,1))
 #vet1 = Nx.iota({1,n}, type: :f32)
 #vet2 = Nx.iota({1,n}, type: :f32)
 
