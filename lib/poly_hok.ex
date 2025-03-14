@@ -109,7 +109,7 @@ end
     #IO.inspect body
     {:__aliases__, _, [module_name]} = header
 
-
+   IO.puts "IO"
     JIT.process_module(module_name,body)
 
     ast_new_module = PolyHok.CudaBackend.gen_new_module(header,body)
