@@ -87,12 +87,20 @@ int main(int argc, char *argv[])
     resp = (float*)malloc(N*sizeof(float));
 
     for(int i=0; i<N; i++) {
-		a[i] = rand();
+		//a[i] = rand();
+        if(i % 2 == 0,)
+        {
+            a[i] = 1;
+        } else
+        {
+           a[i] = -1;
+        }
 		
 	}
 
     for(int i=0; i<N; i++) {
-		b[i] = rand();
+		//b[i] = rand();
+        b[i] = 1;
 		
 	}
 
