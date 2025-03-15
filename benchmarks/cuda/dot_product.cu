@@ -87,9 +87,10 @@ int main(int argc, char *argv[])
     resp = (float*)malloc(N*sizeof(float));
 
     for(int i=0; i<N/2; i++) {
-		
-        a[2*i] = rand();
-        a[2*i+1] = -(rand());
+		int v = rand() % 1000 + 1;
+
+        a[2*i] = (float) v;
+        a[2*i+1] = (float) -v;
 		
 	}
 
