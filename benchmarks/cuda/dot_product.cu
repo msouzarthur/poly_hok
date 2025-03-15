@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     for(int i=0; i<N/2; i++) {
 		
         a[2*i] = 10//;rand();
-        a[2*i+1] = -10//-(rand());
+        a[2*i+1] = -10;//-(rand());
 		
 	}
 
