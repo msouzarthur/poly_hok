@@ -108,7 +108,7 @@ for(int i=0; i<tot; i++) {
         a[i] = (float) v;
         a[tot+i] = (float) -v;
 
-        int n = rand() % 1000 +1;
+        int n = rand() % 3 +1;
 
         b[i] = (float) n;
         b[tot+i] = (float) n;
