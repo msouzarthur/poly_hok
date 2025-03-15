@@ -143,7 +143,8 @@ int main(int argc, char *argv[])
      cudaMemcpy( final, d_final, sizeof(float), cudaMemcpyDeviceToHost );
      j_error = cudaGetLastError();
     if(j_error != cudaSuccess) {printf("Error: %s\n", cudaGetErrorString(j_error)); exit(1);}
-
+  
+    printf("Result: %f", final[0]);
     
     cudaFree(dev_a);
 	cudaFree(dev_b);
