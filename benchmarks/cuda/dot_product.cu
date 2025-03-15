@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
     for(int i=0; i<N; i++) {
 		//a[i] = rand();
-        if(i % 2 == 0,)
+        if(i % 2 == 0)
         {
             a[i] = 10;
         } else
