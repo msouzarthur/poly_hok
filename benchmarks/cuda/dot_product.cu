@@ -86,15 +86,10 @@ int main(int argc, char *argv[])
     b = (float*)malloc(N*sizeof(float));
     resp = (float*)malloc(N*sizeof(float));
 
-    for(int i=0; i<N; i++) {
-		//a[i] = rand();
-        if(i % 2 == 0)
-        {
-            a[i] = 10;
-        } else
-        {
-           a[i] = -10;
-        }
+    for(int i=0; i<N/2; i++) {
+		
+        a[2*i] = rand();
+        a[2*i+1] = -(rand());
 		
 	}
 
