@@ -91,14 +91,15 @@ int main(int argc, char *argv[])
 
         a[2*i] = (float) v;
         a[2*i+1] = (float) -v;
+
+        int n = rand() % 1000 +1;
+
+        b[2*i] = (float) n;
+        b[2*i+1] = (float) -n;
 		
 	}
 
-    for(int i=0; i<N; i++) {
-		//b[i] = rand();
-        b[i] = 1;
-		
-	}
+  
 
     int threadsPerBlock = 256;
     int  numberOfBlocks = (N + threadsPerBlock - 1)/ threadsPerBlock;
