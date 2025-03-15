@@ -132,11 +132,14 @@ int main(int argc, char *argv[])
     final = (float *)malloc(sizeof(float));
 
     final[0] =0;
+    
+    cudaMalloc((void **) &d_final,sizeof(float));
+    
     cudaMemcpy(d_final, final, sizeof(float), cudaMemcpyHostToDevice);
      j_error = cudaGetLastError();
     if(j_error != cudaSuccess) {printf("Error: %s\n", cudaGetErrorString(j_error)); exit(1);}
 
-	cudaMalloc((void **) &d_final,sizeof(float));
+	
 
     map_2kernel<<< numberOfBlocks, threadsPerBlock>>>(dev_a, dev_b, dev_resp, N);
      j_error = cudaGetLastError();
