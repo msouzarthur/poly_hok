@@ -282,13 +282,13 @@ static ERL_NIF_TERM jit_compile_and_launch_nif(ErlNifEnv *env, int argc, const E
  // CUcontext  context2 = NULL;
  // err = cuCtxCreate(&context2, 0, device);
   err = cuModuleLoadDataEx(&module,  ptx, 0, 0, 0);
- printf("after module load\n");
+ //printf("after module load\n");
   if (err != CUDA_SUCCESS) fail_cuda(env,err,"cuModuleLoadData jit compile");
 
   // And here is how you use your compiled PTX
  
   err = cuModuleGetFunction(&function, module, kernel_name);
-printf("after get funcction\n");
+//printf("after get funcction\n");
   if (err != CUDA_SUCCESS) fail_cuda(env,err,"cuModuleGetFunction jit compile");
 
 
@@ -395,7 +395,7 @@ printf("after get funcction\n");
     list_args = tail_args;
   }
 
-printf("after arguments and types\n");
+//printf("after arguments and types\n");
 
   // LAUNCH KERNEL
 
@@ -412,7 +412,7 @@ printf("after arguments and types\n");
   err = cuLaunchKernel(function, b1, b2, b3,  // Nx1x1 blocks
                                     t1, t2, t3,            // 1x1x1 threads
                                     0, 0, args, 0) ;
-  printf("after kernel launch\n");
+ // printf("after kernel launch\n");
   if (err != CUDA_SUCCESS) fail_cuda(env,err,"cuLaunchKernel jit compile");
    
   cuCtxSynchronize();
