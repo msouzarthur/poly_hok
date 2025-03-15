@@ -90,10 +90,10 @@ int main(int argc, char *argv[])
 		//a[i] = rand();
         if(i % 2 == 0,)
         {
-            a[i] = 1;
+            a[i] = 10;
         } else
         {
-           a[i] = -1;
+           a[i] = -10;
         }
 		
 	}
