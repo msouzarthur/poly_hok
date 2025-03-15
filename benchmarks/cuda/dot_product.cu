@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 */
 
 int tot = N/2;
-for(int i=0; i<t; i++) {
+for(int i=0; i<tot; i++) {
 		int v = rand() % 1000 + 1;
 
         a[i] = (float) v;
