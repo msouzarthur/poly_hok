@@ -86,10 +86,10 @@ include CAS
   defp gen_new_dataset_nx_f(size, a1,a2) do
 
     {ax,ay} = if (rem(size,2) == 0) do
-                v = :rand.uniform(1000)
+                v = :rand.uniform(1000)/1
                 {v,-v}
               else
-                v = :rand.uniform(1000)
+                v = :rand.uniform(1000)/1
                 {-v,v}
               end
     gen_new_dataset_nx_f(
