@@ -154,12 +154,12 @@ ref1 = PolyHok.new_gnx(vet1)
 ref2 = PolyHok.new_gnx(vet2)
 
 
-result = ref1
+_result = ref1
     |> DP.map2(ref2, PolyHok.phok fn (a,b) -> a * b end)
     |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
 
-IO.inspect result
+#IO.inspect result
 
 next = System.monotonic_time()
 
