@@ -92,7 +92,7 @@ include CAS
                 v = :rand.uniform(1000)/1
                 {-v,v}
               end
-              IO.inspect ax
+              #IO.inspect ax
     gen_new_dataset_nx_f(
         size - 1,
         <<a1::binary, ax::float-little-32>>,
@@ -120,7 +120,6 @@ n = String.to_integer(arg)
 vet1 = DP.new_dataset_nx(n)
 vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn  -> 1 end)
 
-IO.inspect vet1
 #vet2 = Nx.tensor(DP.rep_change(n,1), type: {:f,32})
 #vet1 = Nx.iota({1,n}, type: :f32)
 #vet2 = Nx.iota({1,n}, type: :f32)
