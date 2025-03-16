@@ -92,6 +92,7 @@ include CAS
                 v = :rand.uniform(1000)/1
                 {-v,v}
               end
+              IO.inspect ax
     gen_new_dataset_nx_f(
         size - 1,
         <<a1::binary, ax::float-little-64>>,
