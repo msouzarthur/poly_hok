@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 
 int tot = N/2;
 for(int i=0; i<tot; i++) {
-		int v = rand() % 1000 + 1;
+		int v = rand() % 100 + 1;
 
       if(i%2 == 0)
       {
@@ -120,8 +120,8 @@ for(int i=0; i<tot; i++) {
       }
         int n = rand() % 2;
 
-        b[i] = (float) 1;
-        b[tot+i] = (float) 1;
+        b[i] = (float) n;
+        b[tot+i] = (float) n;
 		
 	}
 
