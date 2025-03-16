@@ -85,7 +85,7 @@ include CAS
   defp gen_new_dataset_nx_f(0,a1,a2), do: <<a1::binary,a2::binary>>
   defp gen_new_dataset_nx_f(size, a1,a2) do
 
-    {ax,ay} = if (size % 2 == 0) do
+    {ax,ay} = if (rem(size,2) == 0) do
                 v = :rand.uninform(1000)
                 {v,-v}
               else
