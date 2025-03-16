@@ -120,8 +120,8 @@ for(int i=0; i<tot; i++) {
       }
         int n = rand() % 2;
 
-        b[i] = (float) n;
-        b[tot+i] = (float) n;
+        b[i] = (float) 1;
+        b[tot+i] = (float) 1;
 		
 	}
 
