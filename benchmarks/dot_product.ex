@@ -81,22 +81,27 @@ include CAS
   def rep_pos(n,x), do:  [x | rep_neg(n-1,x)]
   def rep_neg(0,_x), do: []
   def rep_neg(n,x), do:  [-x | rep_pos(n-1,x)]
-  def new_dataset_nx(n), do: gen_nx_f(n,gen_new_dataset_nx_f(div(n,2),<<>>,<<>>))
-  defp gen_new_dataset_nx_f(0,a1,a2), do: <<a1::binary,a2::binary>>
-  defp gen_new_dataset_nx_f(size, a1,a2) do
+  def new_dataset_nx(n), do:
+   {a_bin, b_bin} = gen_new_dataset_nx_f(div(n,2),<<>>,<<>>,<<>>,<<>>)
+   {gen_nx_f(n,a_bin),gen_nx_f(n,b_bin)}
+  defp gen_new_dataset_nx_f(0,a1,a2,b1,b2), do: {<<a1::binary,a2::binary>>, <<b1::binary,b2::binary>>}
+  defp gen_new_dataset_nx_f(size, a1,a2,b1,b2) do
 
     {ax,ay} = if (rem(size,2) == 0) do
-                v = :rand.uniform(1000)/1
+                v = :rand.uniform(100)/1
                 {v,-v}
               else
-                v = :rand.uniform(1000)/1
+                v = :rand.uniform(100)/1
                 {-v,v}
               end
-              #IO.inspect ax
+
+    b = :rand.uniform(5)/1
     gen_new_dataset_nx_f(
         size - 1,
         <<a1::binary, ax::float-little-32>>,
-        <<a2::binary, ay::float-little-32>>
+        <<a2::binary, ay::float-little-32>>,
+        <<b1::binary, b::float-little-32>>,
+        <<b2::binary, b::float-little-32>>
       )
   end
   defp gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
@@ -117,8 +122,10 @@ n = String.to_integer(arg)
 #vet1 = PolyHok.new_nx_from_function_arg(1,n,{:f,32},fn x -> if Integer.is_even(x) do 10 else -10 end end )
 #vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn  -> 1 end)
 
-vet1 = DP.new_dataset_nx(n)
-vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn  -> 1 end)
+#vet1 = DP.new_dataset_nx(n)
+#vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn  -> 1 end)
+
+{vet1,vet2} = DP.new_dataset_nx(n)
 
 #vet2 = Nx.tensor(DP.rep_change(n,1), type: {:f,32})
 #vet1 = Nx.iota({1,n}, type: :f32)
