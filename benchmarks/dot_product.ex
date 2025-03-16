@@ -81,7 +81,7 @@ include CAS
   def rep_pos(n,x), do:  [x | rep_neg(n-1,x)]
   def rep_neg(0,_x), do: []
   def rep_neg(n,x), do:  [-x | rep_pos(n-1,x)]
-  def new_dataset_nx(n), do: gen_nx_f(gen_new_dataset_nx_f(n/2,<<>>,<<>>))
+  def new_dataset_nx(n), do: gen_nx_f(n,gen_new_dataset_nx_f(n/2,<<>>,<<>>))
   defp gen_new_dataset_nx_f(0,a1,a2), do: <<a1::binary,a2::binary>>
   defp gen_new_dataset_nx_f(size, a1,a2) do
 
