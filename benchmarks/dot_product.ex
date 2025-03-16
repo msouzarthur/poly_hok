@@ -104,7 +104,7 @@ include CAS
         <<b2::binary, b::float-little-32>>
       )
   end
-  defp gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
+  def gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
 end
 #PolyHok.include [DP]
 
