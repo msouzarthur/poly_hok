@@ -81,9 +81,10 @@ include CAS
   def rep_pos(n,x), do:  [x | rep_neg(n-1,x)]
   def rep_neg(0,_x), do: []
   def rep_neg(n,x), do:  [-x | rep_pos(n-1,x)]
-  def new_dataset_nx(n), do:
+  def new_dataset_nx(n) do
    {a_bin, b_bin} = gen_new_dataset_nx_f(div(n,2),<<>>,<<>>,<<>>,<<>>)
    {gen_nx_f(n,a_bin),gen_nx_f(n,b_bin)}
+  end
   defp gen_new_dataset_nx_f(0,a1,a2,b1,b2), do: {<<a1::binary,a2::binary>>, <<b1::binary,b2::binary>>}
   defp gen_new_dataset_nx_f(size, a1,a2,b1,b2) do
 
@@ -104,7 +105,7 @@ include CAS
         <<b2::binary, b::float-little-32>>
       )
   end
-  def gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
+  defp gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
 end
 #PolyHok.include [DP]
 
