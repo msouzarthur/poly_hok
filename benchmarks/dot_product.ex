@@ -81,8 +81,18 @@ include CAS
   def rep_pos(n,x), do:  [x | rep_neg(n-1,x)]
   def rep_neg(0,_x), do: []
   def rep_neg(n,x), do:  [-x | rep_pos(n-1,x)]
-end
+  def new_dataset_nx(n) do: gen_new_dataset_nx_f(n/2,<<>>,<<>>,<<>>,<<>>)
+  defp gen_new_dataset_nx_f(0,a1,a2,b1,b2), do: {<<a1::binary,a2::binary>>,<<b1::binary,b2::binary>>}
+  defp new_matrix_from_function_d(size, function, accumulator) do
 
+      new_matrix_from_function_d(
+        size - 1,
+        function,
+        <<accumulator::binary, function.()::float-little-64>>
+      )
+  end
+  defp gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
+end
 #PolyHok.include [DP]
 
 [arg] = System.argv()
