@@ -87,9 +87,12 @@ int main(int argc, char *argv[])
     resp = (float*)malloc(N*sizeof(float));
 
 
+    /*
     for(int i=0; i<N/2; i++) {
-		int v = rand() % 1000 + 1;
+	int v = rand() % 1000 + 1;
 
+    if (i % 2 == 0)
+     {
         a[2*i] = (float) v;
         a[2*i+1] = (float) -v;
 
@@ -100,21 +103,28 @@ int main(int argc, char *argv[])
 		
 	}
 
+*/
 
-/*int tot = N/2;
+int tot = N/2;
 for(int i=0; i<tot; i++) {
 		int v = rand() % 1000 + 1;
 
+      if(i%2 == 0)
+      {
         a[i] = (float) v;
         a[tot+i] = (float) -v;
-
+      } else
+      {
+        a[i] = (float) -v;
+        a[tot+i] = (float) v;
+      }
         int n = rand() % 2 +1;
 
         b[i] = (float) 1;
         b[tot+i] = (float) 1;
 		
 	}
-  */
+
 
     int threadsPerBlock = 256;
     int  numberOfBlocks = (N + threadsPerBlock - 1)/ threadsPerBlock;
