@@ -45,7 +45,7 @@ include CAS
     tid = threadIdx.x + blockIdx.x * blockDim.x;
     cacheIndex = threadIdx.x
 
-    temp = ref4[0] # 0.0
+    temp = 0.0 #ref4[0] # 0.0
 
     while (tid < n) do
       temp = f(a[tid], temp)

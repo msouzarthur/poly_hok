@@ -180,7 +180,7 @@ for(int i=0; i<tot; i++) {
      j_error = cudaGetLastError();
     if(j_error != cudaSuccess) {printf("Error: %s\n", cudaGetErrorString(j_error)); exit(1);}
   
-    printf("Result: %f\n", final[0]);
+   // printf("Result: %f\n", final[0]);
     
     cudaFree(dev_a);
 	cudaFree(dev_b);
@@ -193,11 +193,11 @@ for(int i=0; i<tot; i++) {
 
     printf("CUDA\t%d\t%3.1f\n", N,time);
 
-
+/*
     for(int i=0; i<10; i++) {
 		printf("a[%d] = %f;\n",i,a[i]);
 	}
-
+*/
 
 	//printf("\n FINAL RESULTADO: %f \n", c);
 
