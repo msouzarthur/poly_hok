@@ -95,8 +95,8 @@ include CAS
               IO.inspect ax
     gen_new_dataset_nx_f(
         size - 1,
-        <<a1::binary, ax::float-little-64>>,
-        <<a2::binary, ay::float-little-64>>
+        <<a1::binary, ax::float-little-32>>,
+        <<a2::binary, ay::float-little-32>>
       )
   end
   defp gen_nx_f(size,ref), do:  %Nx.Tensor{data: %Nx.BinaryBackend{ state: ref}, type: {:f,32}, shape: {1,size}, names: [nil,nil]}
