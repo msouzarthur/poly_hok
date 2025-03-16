@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
         int n = rand() % 1000 +1;
 
         b[2*i] = (float) n;
-        b[2*i+1] = (float) -n;
+        b[2*i+1] = (float) n;
 		
 	}
 
