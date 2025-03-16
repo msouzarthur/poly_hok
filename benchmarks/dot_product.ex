@@ -119,7 +119,7 @@ n = String.to_integer(arg)
 vet1 = DP.new_dataset_nx(n)
 vet2 = PolyHok.new_nx_from_function(1,n,{:f,32},fn  -> 1 end)
 
-
+IO.inspect vet1
 #vet2 = Nx.tensor(DP.rep_change(n,1), type: {:f,32})
 #vet1 = Nx.iota({1,n}, type: :f32)
 #vet2 = Nx.iota({1,n}, type: :f32)
