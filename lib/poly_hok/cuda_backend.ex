@@ -8,23 +8,23 @@ defmodule PolyHok.CudaBackend do
           _   -> gen_new_definitions([body])
     end
 
-    #using = quote do
-    #  defmacro __using__(_opts) do
-    #    IO.puts "You are USIng!"
-    #  end
-    #end
+    using = quote do
+      defmacro __using__(_opts) do
+        IO.puts "You are USIng!"
+      end
+    end
     #IO.inspect using
     #IO.inspect new_body
-    using = {:defmacro, [line: 16, column: 3],
-      [
-      {:__using__, [line: 16, column: 12],
-      [{:_opts, [line: 16, column: 22], nil}]},
-      [
-       do: {{:., [line: 17, column: 10],
-         [{:__aliases__, [line: 17, column: 8], [:IO]}, :puts]},
-        [line: 17, column: 11], ["You are USIng!"]}
-      ]
-    ]}
+    #using = {:defmacro, [line: 16, column: 3],
+    #  [
+    #  {:__using__, [line: 16, column: 12],
+    #  [{:_opts, [line: 16, column: 22], nil}]},
+    #  [
+    #   do: {{:., [line: 17, column: 10],
+    #     [{:__aliases__, [line: 17, column: 8], [:IO]}, :puts]},
+    #    [line: 17, column: 11], ["You are USIng!"]}
+    #  ]
+    #]}
     new_module = quote do
       defmodule (unquote(header)) do
        unquote([using|new_body])
