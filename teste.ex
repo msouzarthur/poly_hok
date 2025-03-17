@@ -1,5 +1,5 @@
 require PolyHok
-require Ske
+use Ske
 
 n = 1000
 
