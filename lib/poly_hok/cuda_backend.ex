@@ -10,7 +10,7 @@ defmodule PolyHok.CudaBackend do
 
     {:__aliases__, _, [module_name]} = header
 
-    IO.inspect body
+    #IO.inspect body
 
     using = quote do
       defmacro __using__(_opts) do
