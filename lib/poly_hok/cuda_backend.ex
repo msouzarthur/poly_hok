@@ -52,6 +52,7 @@ end
     [new_code | gen_new_definitions(t)]
   end
   defp gen_new_definitions([h | t]) do
+      IO.inpsect h
       [h | gen_new_definitions(t)]
   end
 
