@@ -260,9 +260,9 @@ def process_module(module_name,body) do
     pid = spawn_link(fn -> module_server(%{},%{}) end)
     Process.register(pid, :module_server)
   end
-  case body do
-      {:__block__, [], definitions} ->  process_definitions(module_name,definitions)
-      _   -> process_definitions(module_name,[body])
+  defs=case body do
+      {:__block__, [], definitions} ->  process_definitions(module_name,definitions,[])
+      _   -> process_definitions(module_name,[body],[])
   end
 end
 
@@ -300,13 +300,13 @@ end
 #############################################
 ##### For every function and kernel definition, it registers an ast and and the functions called inside the definition
 #####################
-defp process_definitions(_module_name, []), do: :ok
-defp process_definitions(module_name,[h|t]) do
+defp process_definitions(_module_name, [],l), do: reverse l
+defp process_definitions(module_name,[h|t],l) do
        case h do
         {:defk,_,[header,[_body]]} ->  {fname, _, _para} = header
                                       funs = find_functions(h)
                                       register_function(module_name,fname,h,funs)
-                                      process_definitions(module_name,t)
+                                      process_definitions(module_name,t,[{module_name,fname,h,funs}|t])
 
         {:defd , ii, [header,[body]]} -> {fname, _, _para} = header
 
@@ -320,13 +320,13 @@ defp process_definitions(module_name,[h|t]) do
                                        # IO.inspect "Function graph: #{inspect funs}"
                                        # IO.inspect "body: #{inspect body}"
                                         register_function(module_name,fname,{:defd , ii, [header,[body]]},funs)
-                                        process_definitions(module_name,t)
+                                        process_definitions(module_name,t, [{module_name,fname,{:defd , ii, [header,[body]]},funs}|l])
         {:include, _, [{_,_,[name]}]} ->
                 code = File.read!("c_src/Elixir.#{name}.cu")
                 #IO.inspect code
                 send(:module_server,{:add_include,code})
-                process_definitions(module_name,t)
-        _               -> process_definitions(module_name,t)
+                process_definitions(module_name,t,l)
+        _               -> process_definitions(module_name,t,l)
 
 
       end
