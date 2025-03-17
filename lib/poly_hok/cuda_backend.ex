@@ -8,9 +8,13 @@ defmodule PolyHok.CudaBackend do
           _   -> gen_new_definitions([body])
     end
 
+    {:__aliases__, _, [module_name]} = header
+
+
+
     using = quote do
       defmacro __using__(_opts) do
-        IO.puts "You are USIng!"
+        JIT.process_module(unquorte(module_name),unquote(Macro.escape body))
       end
     end
     #IO.inspect using
