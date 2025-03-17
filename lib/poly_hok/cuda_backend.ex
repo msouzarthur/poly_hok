@@ -14,7 +14,7 @@ defmodule PolyHok.CudaBackend do
 
     using = quote do
       defmacro __using__(_opts) do
-        JIT.process_module(unquote(module_name),unquote(Macro.escape body))
+        JIT.process_module(unquote(module_name),Macro.escape body)
       end
     end
     #IO.inspect using
