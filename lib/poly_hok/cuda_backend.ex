@@ -14,7 +14,7 @@ defmodule PolyHok.CudaBackend do
       end
     end
     IO.inspect using
-    IO.inspect body
+    IO.inspect new_body
     new_module = quote do
       defmodule (unquote(header)) do
        unquote(new_body)
