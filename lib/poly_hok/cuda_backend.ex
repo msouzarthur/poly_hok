@@ -26,7 +26,7 @@ defmodule PolyHok.CudaBackend do
       ]
     ]}
     new_module = quote do
-      defmodule (unquote({:__block__, [],[using|header]})) do
+      defmodule (unquote([using|header])) do
        unquote(new_body)
        end
     end
