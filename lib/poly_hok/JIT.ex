@@ -300,7 +300,7 @@ end
 #############################################
 ##### For every function and kernel definition, it registers an ast and and the functions called inside the definition
 #####################
-defp process_definitions(_module_name, [],l), do: Enum.reverse(l)
+defp process_definitions(_module_name, [],l), do: :ok
 defp process_definitions(module_name,[h|t],l) do
        case h do
         {:defk,_,[header,[_body]]} ->  {fname, _, _para} = header
