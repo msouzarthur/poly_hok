@@ -13,6 +13,7 @@ defmodule PolyHok.CudaBackend do
         IO.puts "You are USIng!"
       end
     end
+    IO.inspect using
     new_module = quote do
       defmodule (unquote([using|header])) do
        unquote(new_body)
