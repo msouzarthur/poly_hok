@@ -14,7 +14,7 @@ defmodule PolyHok.CudaBackend do
       end
     end
     new_module = quote do
-      defmodule (unquote(header)) do
+      defmodule (unquote([using|header])) do
        unquote(new_body)
        end
     end
