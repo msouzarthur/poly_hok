@@ -1,5 +1,5 @@
 require PolyHok
-import Ske
+use Ske
 
 n = 1000
 
