@@ -21,7 +21,7 @@ PolyHok.defmodule Ske do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
 
     case shape do
-      {1,n} -> if (not coord && not return && dim == :one)do
+      {1,_n} -> if (not coord && not return && dim == :one)do
                   map_2_para_no_resp({:nx, type, shape, name , ref},  par1, par2, func)
               end
      end
