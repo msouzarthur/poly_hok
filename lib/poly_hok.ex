@@ -113,7 +113,7 @@ end
 
     ast_new_module = PolyHok.CudaBackend.gen_new_module(header,body)
     #IO.inspect ast_new_module
-    ast_new_module
+    IO.inspect ast_new_module
 
 
     #quote do: IO.puts "ok"

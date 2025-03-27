@@ -44,7 +44,7 @@ PolyHok.defmodule Ske do
       nBlocks = floor ((size + block_size - 1) / block_size)
   
       PolyHok.spawn(&Ske.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,l,f])
-        d_array
+      d_array
   end
   defk map_ker(a1,a2,size,f) do
       index = blockIdx.x * blockDim.x + threadIdx.x
