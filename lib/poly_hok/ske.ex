@@ -19,9 +19,10 @@ PolyHok.defmodule Ske do
   @defaults %{coord: false, return: true, dim: :one}
   def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
-    
-     if (not coord && not return && dim == :one)do
-      map_2_para_no_resp({:nx, type, shape, name , ref},  par1, par2, func)
+
+    case shape do
+      {1,n} -> if (not coord && not return && dim == :one)do
+                map_2_para_no_resp({:nx, type, shape, name , ref},  par1, par2, func)
      end
   end
   def map(input, f) do
