@@ -175,13 +175,13 @@ defmodule Main do
 
        # PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
 
-        _image = PolyHok.get_gnx(ref_image)
+        image = PolyHok.get_gnx(ref_image)
 
         next = System.monotonic_time()
         IO.puts "PolyHok\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
 
 
-        #BMP.gen_bmp_int('ray.bmp',width,image)
+        BMP.gen_bmp_int('ray.bmp',width,image)
 
         #image = Matrex.to_list(image)
 
