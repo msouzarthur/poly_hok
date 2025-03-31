@@ -90,42 +90,6 @@ defmodule Main do
         | sphereMaker2(n - 1,dim)]
 
     end
-
-    def spherePrinter([]) do
-      File.write!("spheregpu.txt", "done\n", [:append])
-
-    end
-    def spherePrinter([ r, g, b, _radius, _x, _y, _z | list]) do
-      File.write!("spheregpu.txt", "\t r: #{r}", [:append])
-      File.write!("spheregpu.txt", "\t g: #{g}", [:append])
-      File.write!("spheregpu.txt", "\t b: #{b}", [:append])
-      File.write!("spheregpu.txt", "\n", [:append])
-      spherePrinter(list)
-    end
-
-
-    def sphereMaker(spheres, max, max) do
-      max = max - 1
-        Matrex.set(spheres, 1, max * 7 + 1, Main.rnd(1))
-        |> Matrex.set( 1, max * 7 + 2, Main.rnd(1)) #g
-        |> Matrex.set( 1, max * 7 + 3, Main.rnd(1)) #b
-        |> Matrex.set( 1, max * 7 + 4, Main.rnd(20) + 5) #radius
-        |> Matrex.set( 1, max * 7 + 5, Main.rnd(Main.dim) - Main.dim/2) #x
-        |> Matrex.set( 1, max * 7 + 6, Main.rnd(Main.dim) - Main.dim/2) #y
-        |> Matrex.set( 1, max * 7 + 7, Main.rnd(256) - 128) #z
-    end
-    def sphereMaker(spheres, n, max) do
-
-      Matrex.set(spheres, 1, n * 7 + 1, Main.rnd(1)) #r
-      |> Matrex.set( 1, (n - 1) * 7 + 2, Main.rnd(1)) #g
-      |> Matrex.set( 1, (n - 1) * 7 + 3, Main.rnd(1)) #b
-      |> Matrex.set( 1, (n - 1) * 7 + 4, Main.rnd(20) + 5) #radius
-      |> Matrex.set( 1, (n - 1) * 7 + 5, Main.rnd(Main.dim) - Main.dim/2) #x
-      |> Matrex.set( 1, (n - 1) * 7 + 6, Main.rnd(Main.dim) - Main.dim/2) #y
-      |> Matrex.set( 1, (n - 1) * 7 + 7, Main.rnd(256) - 128) #z
-      |> sphereMaker(n + 1, max)
-    end
-
     def dim do
       {d, _} = Integer.parse(Enum.at(System.argv, 0))
       d
@@ -138,7 +102,7 @@ defmodule Main do
 
     def main do
         use Ske
-        
+
         sphereList = Nx.tensor([sphereMaker2(Main.spheres,Main.dim)], type: {:f,32})
 
         width = Main.dim
