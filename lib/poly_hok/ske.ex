@@ -24,16 +24,16 @@ PolyHok.defmodule Ske do
                   {_m,_n} -> if (not coord && not return )do
                                 map_2_para_no_resp({:nx, type, shape, name , ref},  par1, par2, func)
                               end
-                              IO.puts "io1"
+                              
               end                
      :two ->  case shape do
                     {_m,_n,_o} -> if (coord && not return) do
                                       map_coord_2D_2para_no_resp({:nx, type, shape, name , ref}, par1, par2, func)
                                   end
-                                  IO.puts "io2"
+                                 
               end
   end
-  IO.puts "io3"
+  
   end
   def map(input, f) do
     shape = PolyHok.get_shape(input)
