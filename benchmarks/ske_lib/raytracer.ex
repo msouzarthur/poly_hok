@@ -179,10 +179,8 @@ defmodule Main do
         ref_sphere = PolyHok.new_gnx(sphereList)
         ref_image = PolyHok.new_gnx(1,width * height  * 4,{:s,32})
 
-        RayTracer.mapxy_2D_para_no_resp(ref_image, 4,width, ref_sphere, width, &RayTracer.raytracing/5)
-
-       # PolyHok.spawn_jit(&RayTracer.raytracing/4,{trunc(width/16),trunc(height/16),1},{16,16,1},[width, height, refSphere, refImag])
-
+        Ske.map(ref_image, &RayTracer.raytracing/5 , [width, spheres], :dim :two, :return false)
+      
         _image = PolyHok.get_gnx(ref_image)
 
         next = System.monotonic_time()
