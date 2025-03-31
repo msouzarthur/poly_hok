@@ -177,7 +177,7 @@ defmodule Main do
         prev = System.monotonic_time()
 
         ref_sphere = PolyHok.new_gnx(sphereList)
-        ref_image = PolyHok.new_gnx(width, height, 4,{:s,32})
+        ref_image = PolyHok.new_gnx({width, height, 4},{:s,32})
 
         Ske.map(ref_image, &RayTracer.raytracing/5 , [width, sphereList], dim: :two, return: false)
       
