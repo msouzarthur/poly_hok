@@ -60,7 +60,7 @@ PolyHok.defmodule Ske do
   end
   def map_coord_2D_2para_no_resp(d_array, par1, par2, f) do
   
-    {sizex,sizey,step} =  case PolyHok.get_shape_gnx(d_array) do
+    IO.inspect {sizex,sizey,step} =  case PolyHok.get_shape_gnx(d_array) do
                             {l,c} -> {l,c,1}
                             {l,c,step} -> {l,c,step}
                             x -> raise "Invalid shape for a 2D map: #{inspect x}!"
