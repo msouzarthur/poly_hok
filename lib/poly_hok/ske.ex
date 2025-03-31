@@ -69,7 +69,7 @@ PolyHok.defmodule Ske do
                             x -> raise "Invalid shape for a 2D map: #{inspect x}!"
                           end
   
-    IO.inspect {sizex,sizey,step}
+    #IO.inspect {sizex,sizey,step}
     block_size = 16
     grid_rows = trunc ((sizex + block_size - 1) / block_size)
     grid_cols = trunc ((sizey + block_size - 1) / block_size)
