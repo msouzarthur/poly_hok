@@ -152,13 +152,13 @@ defmodule Main do
 
         Ske.map(ref_image, &RayTracer.raytracing/5 , [width, ref_sphere], dim: :two, return: false)
       
-        _image = PolyHok.get_gnx(ref_image)
+        image = PolyHok.get_gnx(ref_image)
 
         next = System.monotonic_time()
         IO.puts "PolyHok\t#{width}\t#{System.convert_time_unit(next-prev,:native,:millisecond)} "
 
 
-        #BMP.gen_bmp_int('ray.bmp',width,image)
+        BMP.gen_bmp_int('ray.bmp',width,image)
 
 
 
