@@ -60,12 +60,13 @@ PolyHok.defmodule Ske do
   end
   def map_coord_2D_2para_no_resp(d_array, par1, par2, f) do
   
-    IO.inspect {sizex,sizey,step} =  case PolyHok.get_shape_gnx(d_array) do
+   {sizex,sizey,step} =  case PolyHok.get_shape_gnx(d_array) do
                             {l,c} -> {l,c,1}
                             {l,c,step} -> {l,c,step}
                             x -> raise "Invalid shape for a 2D map: #{inspect x}!"
                           end
   
+    IO.inspect {sizex,sizey,step}
     block_size = 16
     grid_rows = trunc ((sizex + block_size - 1) / block_size)
     grid_cols = trunc ((sizey + block_size - 1) / block_size)
