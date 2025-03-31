@@ -137,7 +137,8 @@ defmodule Main do
     end
 
     def main do
-
+        use Ske
+        
         sphereList = Nx.tensor([sphereMaker2(Main.spheres,Main.dim)], type: {:f,32})
 
         width = Main.dim
