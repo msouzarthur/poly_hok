@@ -26,8 +26,6 @@ PolyHok.defmodule RayTracer do
 
 defd raytracing(image, width,  spheres ,x,y) do
 
-
-
   ox = 0.0
   oy = 0.0
   ox = (x - width/2)
@@ -73,7 +71,7 @@ defd raytracing(image, width,  spheres ,x,y) do
 
 end
 
-defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
+defk map_coord_2D_2para_no_resp_kernel(d_array,  step, par1, par2,sizex,sizey,f) do
 
   x = threadIdx.x + blockIdx.x * blockDim.x
   y = threadIdx.y + blockIdx.y * blockDim.y
@@ -81,13 +79,24 @@ defk mapxy_2D_step_2_para_no_resp_kernel(d_array,  step, par1, par2,size,f) do
 
    id  = step * offset
   #f(id,id)
-  if (offset < (size*size)) do
+  if (offset < (sizex*sizey)) do
     f(d_array+id,par1,par2,x,y)
   end
 end
-def mapxy_2D_para_no_resp(d_array,  step,par1, par2, size, f) do
+def map_coord_2D_2para_no_resp(d_array, par1, par2, f) do
 
-    PolyHok.spawn(&RayTracer.mapxy_2D_step_2_para_no_resp_kernel/6,{trunc(size/16),trunc(size/16),1},{16,16,1},[d_array,step,par1,par2,size,f])
+  {sizex,sizey,step} =  case PolyHok.get_shape_gnx(d_array) do
+                          {l,c} -> {l,c,1}
+                          {l,c,step} -> {l,c,step}
+                          x -> raise "Invalid shape for a 2D map: #{inspect x}!"
+                        end
+
+  block_size = 16
+  grid_rows = trunc ((sizex + block_size - 1) / block_size)
+  grid_cols = trunc ((sizey + block_size - 1) / block_size)
+
+
+  PolyHok.spawn(&RayTracer.map_coord_2D_2para_no_resp/6,{grid_cols,grid_rows,1},{block_size,block_size,1},[d_array,step,par1,par2,sizex,sizey,f])
     d_array
 end
 
@@ -164,7 +173,6 @@ defmodule Main do
         height = width
 
 
-        #imageList = Matrex.zeros(1, (width + 1) * (height + 1) * 4)
 
         prev = System.monotonic_time()
 
@@ -183,15 +191,6 @@ defmodule Main do
 
         #BMP.gen_bmp_int('ray.bmp',width,image)
 
-        #image = Matrex.to_list(image)
-
-        #widthInBytes = width * Bmpgen.bytes_per_pixel
-        #paddingSize = rem((4 - rem(widthInBytes, 4)), 4)
-        #stride = widthInBytes + paddingSize
-
-        #Bmpgen.writeFileHeader(height, stride)
-        #Bmpgen.writeInfoHeader(height, width)
-        #Bmpgen.recursiveWrite(image)
 
 
     end

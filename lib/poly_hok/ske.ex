@@ -19,12 +19,16 @@ PolyHok.defmodule Ske do
   @defaults %{coord: false, return: true, dim: :one}
   def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+  case dim do
+    :one ->   case shape do
+                  {_m,_n} -> if (not coord && not return )do
+                                map_2_para_no_resp({:nx, type, shape, name , ref},  par1, par2, func)
+                              end
+     :two ->  case shape do
+                    {_m,_n,_o} -> if (coord && not return) do
 
-    case shape do
-      {_m,_n} -> if (not coord && not return && dim == :one)do
-                  map_2_para_no_resp({:nx, type, shape, name , ref},  par1, par2, func)
-              end
-     end
+                                  end
+    end
   end
   def map(input, f) do
     shape = PolyHok.get_shape(input)
@@ -45,7 +49,7 @@ PolyHok.defmodule Ske do
       {l,step} = PolyHok.get_shape_gnx(d_array)
       size = l*step
       nBlocks = floor ((size + block_size - 1) / block_size)
-  
+
       PolyHok.spawn(&Ske.map_step_2_para_no_resp_kernel/6,{nBlocks,1,1},{block_size,1,1},[d_array,step,par1,par2,l,f])
       d_array
   end
