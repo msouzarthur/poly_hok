@@ -17,7 +17,8 @@ PolyHok.defmodule Ske do
   #     IO.puts "You are USIng!"
   #    end
   @defaults %{coord: false, return: true, dim: :one}
-  def map({:nx, type, shape, name , ref}, func, [par1,par2], options \\ [])do
+  def map(a,b,c,options \\[])
+  def map({:nx, type, shape, name , ref}, func, [par1,par2], options )do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
   case dim do
     :one ->   if (not coord && not return )do
