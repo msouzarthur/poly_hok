@@ -68,7 +68,7 @@ result_gpu = PolyHok.new_gnx({dim,dim,4},{:s,32})
 
 prev = System.monotonic_time()
 
-_image = result_gpu
+image = result_gpu
   |> Ske.map(&Julia.julia_function/4,[dim], return: false, dim: :two, coord: true)
   |> PolyHok.get_gnx
 
@@ -76,4 +76,4 @@ next = System.monotonic_time()
 
 IO.puts "PolyHok\t#{dim}\t#{System.convert_time_unit(next-prev,:native,:millisecond)}"
 
-#BMP.gen_bmp_int('juliaske.bmp',dim,image)
+BMP.gen_bmp_int('juliaske.bmp',dim,image)
