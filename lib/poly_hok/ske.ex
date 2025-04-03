@@ -52,6 +52,15 @@ end
 
   end
   end
+  def map({:nx, type, shape, name , ref}, {:nx, type, shape, name , ref}, func, options) do
+    %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
+
+    if (coord || not return || dim == :two) do
+      raise "The only options for a map2 are: #{inspect {coord: false, return: true, dim: :one}}"
+    else
+      map2({:nx, type, shape, name , ref}, {:nx, type, shape, name , ref}, func)
+    end
+  end
   def map(input, f) do
     shape = PolyHok.get_shape(input)
     type = PolyHok.get_type(input)
@@ -65,6 +74,27 @@ end
               {threadsPerBlock,1,1},
               [input,result_gpu,size, f])
     result_gpu
+  end
+  defk map2_kernel(a1,a2,a3,size,f) do
+    id = blockIdx.x * blockDim.x + threadIdx.x
+    if(id < size) do
+      a3[id] = f(a1[id],a2[id])
+    end
+  end
+  def map2(t1,t2,func) do
+
+    {l,c} = PolyHok.get_shape_gnx(t1)
+    type = PolyHok.get_type_gnx(t2)
+     size = l*c
+     result_gpu = PolyHok.new_gnx(l,c, type)
+
+      threadsPerBlock = 256;
+      numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
+
+      PolyHok.spawn(&Ske.map2_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[t1,t2,result_gpu,size,func])
+
+
+      result_gpu
   end
   defk map_coord_2D_1_para_no_resp_kernel(d_array,  step, par1,sizex,sizey,f) do
 
