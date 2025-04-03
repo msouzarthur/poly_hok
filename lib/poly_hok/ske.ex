@@ -52,13 +52,13 @@ end
 
   end
   end
-  def map({:nx, type, shape, name, ref}, {:nx, type, shape, name, ref}, func, options) do
+  def map({:nx, type, shape, name, ref}, {:nx, type2, shape2, name2, ref2}, func, options) do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
 
     if (coord || not return || dim == :two) do
       raise "The only options for a map2 are: coord: false, return: true, dim: :one"
     else
-      map2({:nx, type, shape, name , ref}, {:nx, type, shape, name , ref}, func)
+      map2({:nx, type, shape, name , ref}, {:nx, type2, shape2, name2, ref2}, func)
     end
   end
   def map(input, f) do
