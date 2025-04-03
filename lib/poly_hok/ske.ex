@@ -86,7 +86,7 @@ end
     shape = PolyHok.get_shape_gnx(t1)
     type = PolyHok.get_type_gnx(t2)
     size = Tuple.product shape
-    result_gpu = PolyHok.new_gnx(l,c, type)
+    result_gpu = PolyHok.new_gnx(shape, type)
 
       threadsPerBlock = 256;
       numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
