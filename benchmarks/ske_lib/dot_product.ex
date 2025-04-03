@@ -94,6 +94,8 @@ include CAS
 end
 #PolyHok.include [DP]
 
+use Ske
+
 [arg] = System.argv()
 
 n = String.to_integer(arg)
