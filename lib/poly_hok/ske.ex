@@ -47,7 +47,7 @@ PolyHok.defmodule Ske do
 
       result_gpu
   end
-  defk reduce_kernel(a, ref4, initial, n cas, f) do
+  defk reduce_kernel(a, ref4, initial, n, cas, f) do
 
     __shared__ cache[256]
 
