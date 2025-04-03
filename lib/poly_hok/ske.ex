@@ -52,7 +52,7 @@ end
 
   end
   end
-  def map({:nx, type, shape, name , ref}, {:nx, type, shape, name , ref}, func, options) do
+  def map({:nx, type, shape, name, ref}, {:nx, type, shape, name, ref}, func, options) do
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
 
     if (coord || not return || dim == :two) do
