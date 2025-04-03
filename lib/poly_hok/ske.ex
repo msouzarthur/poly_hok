@@ -83,10 +83,10 @@ end
   end
   def map2(t1,t2,func) do
 
-    {l,c} = PolyHok.get_shape_gnx(t1)
+    shape = PolyHok.get_shape_gnx(t1)
     type = PolyHok.get_type_gnx(t2)
-     size = l*c
-     result_gpu = PolyHok.new_gnx(l,c, type)
+    size = Tuple.product shape
+    result_gpu = PolyHok.new_gnx(l,c, type)
 
       threadsPerBlock = 256;
       numberOfBlocks = div(size + threadsPerBlock - 1, threadsPerBlock)
