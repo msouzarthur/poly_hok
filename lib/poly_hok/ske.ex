@@ -16,6 +16,75 @@ PolyHok.defmodule Ske do
   #defmacro __using__(_opts) do
   #     IO.puts "You are USIng!"
   #    end
+
+  include CAS_Poly
+
+  def reduce(ref, initial, f) do
+
+     shape = PolyHok.get_shape_gnx(ref)
+     type = PolyHok.get_type_gnx(ref)
+     size = Tuple.product(shape)
+      result_gpu  = PolyHok.new_gnx(Nx.tensor([[initial]] , type: type))
+
+      threadsPerBlock = 256
+      blocksPerGrid = div(size + threadsPerBlock - 1, threadsPerBlock)
+      numberOfBlocks = blocksPerGrid
+
+      case type do
+        {:f,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_float(x,y,z) end)
+            PolyHok.spawn(&DP.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+
+        {:f,64} -> cas = PolyHok.phok (fn (x,y,z) -> cas_double(x,y,z) end)
+            PolyHok.spawn(&DP.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+
+        {:s,32} -> cas = PolyHok.phok (fn (x,y,z) -> cas_int(x,y,z) end)
+            PolyHok.spawn(&DP.reduce_kernel/5,{numberOfBlocks,1,1},{threadsPerBlock,1,1},[ref,result_gpu, initial, size, cas, f])
+
+        x -> raise "new_gnx: type #{x} not suported"
+     end
+
+
+
+      result_gpu
+  end
+  defk reduce_kernel(a, ref4, initial, n cas, f) do
+
+    __shared__ cache[256]
+
+    tid = threadIdx.x + blockIdx.x * blockDim.x;
+    cacheIndex = threadIdx.x
+
+    temp = initial
+
+    while (tid < n) do
+      temp = f(a[tid], temp)
+      tid = blockDim.x * gridDim.x + tid
+    end
+
+    cache[cacheIndex] = temp
+      __syncthreads()
+
+    i = blockDim.x/2
+
+    while (i != 0 ) do  ###&& tid < n) do
+      #tid = blockDim.x * gridDim.x + tid
+      if (cacheIndex < i) do
+        cache[cacheIndex] = f(cache[cacheIndex + i] , cache[cacheIndex])
+      end
+
+    __syncthreads()
+    i = i/2
+    end
+
+  if (cacheIndex == 0) do
+    current_value = ref4[0]
+    while(!(current_value == cas(ref4,current_value,f(cache[0],current_value)))) do
+      current_value = ref4[0]
+    end
+  end
+
+  end
+
   @defaults %{coord: false, return: true, dim: :one}
   def map(a,b,c,options \\[])
   def map({:nx, type, shape, name , ref}, func, [par1,par2], options )do

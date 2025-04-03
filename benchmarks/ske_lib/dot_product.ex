@@ -114,7 +114,7 @@ ref2 = PolyHok.new_gnx(vet2)
 
 _result = ref1
     |> Ske.map(ref2, PolyHok.phok fn (a,b) -> a * b end)
-    |> DP.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
+    |> Ske.reduce(0.0,PolyHok.phok fn (a,b) -> a + b end)
     |> PolyHok.get_gnx
 
 #IO.inspect result
