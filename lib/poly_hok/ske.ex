@@ -56,7 +56,7 @@ end
     %{coord: coord, return: return, dim: dim} = Enum.into(options, @defaults)
 
     if (coord || not return || dim == :two) do
-      raise "The only options for a map2 are: #{IO.inspect {coord: false, return: true, dim: :one}}"
+      raise "The only options for a map2 are: coord: false, return: true, dim: :one"
     else
       map2({:nx, type, shape, name , ref}, {:nx, type, shape, name , ref}, func)
     end
