@@ -13,10 +13,10 @@ defmodule MC do
 
 end
 
+prev = System.monotonic_time()
+
 [arg] = System.argv()
 n_points = String.to_integer(arg)
-
-prev = System.monotonic_time()
 
 hits = MC.mc(n_points)
 
@@ -25,8 +25,7 @@ next = System.monotonic_time()
 pi_estimate = 4.0 * hits / n_points
 
 IO.puts("""
-  tempo #{System.convert_time_unit(next-prev,:native,:millisecond)}ms
-  pontos #{n_points}
-  pi #{:io_lib.format("~.10f", [pi_estimate])}
-  erro #{:io_lib.format("~.6f", [abs(pi_estimate-:math.pi())/:math.pi()*100])}%
+pi: #{:io_lib.format("~.10f", [pi_estimate])}
+erro: #{:io_lib.format("~.6f", [abs(pi_estimate-:math.pi())/:math.pi()*100])}%
+tempo: #{System.convert_time_unit(next-prev,:native,:millisecond)}ms
 """)

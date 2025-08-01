@@ -36,21 +36,20 @@ __global__ void setup_kernel(curandState *state, int n) {
 }
 
 int main(int argc, char *argv[]) {
-    
+    curandState *d_states;
+    cudaError_t nb_error;
+    cudaEvent_t start, stop;   
+
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    cudaEventRecord(start, 0);
+
     int n_points = atoll(argv[1]);
     int n_blocks = 1024;
     int s_blocks = 128;
     int *d_count, h_count = 0;
 
     float time;
-
-    curandState *d_states;
-    cudaError_t nb_error;
-    cudaEvent_t start, stop;   
-
-    cudaEventCreate(&start) ;
-    cudaEventCreate(&stop) ;
-    cudaEventRecord(start, 0) ;  
     
     int bytes = n_blocks*s_blocks*sizeof(curandState);
 
@@ -76,13 +75,13 @@ int main(int argc, char *argv[]) {
         
     cudaMemcpy(&h_count, d_count, sizeof(int), cudaMemcpyDeviceToHost);
     
+    double pi = 4.0 * (double)h_count / (double)n_points;
+    double error = fabs(pi - PI)/PI * 100.0;
+    
     cudaEventRecord(stop, 0) ;
     cudaEventSynchronize(stop) ;
     cudaEventElapsedTime(&time, start, stop) ;
 
-    double pi = 4.0 * (double)h_count / (double)n_points;
-    double error = fabs(pi - PI)/PI * 100.0;
-    
     printf("pi: %.15f\n", pi);
     printf("erro: %.10f%%\n", error);
     printf("tempo: %3.1fms\n", time);
